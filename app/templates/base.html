@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ app_name }}{% endblock %}</title>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
+    <link href="/static/css/output.css" rel="stylesheet">
+    <style>
+        .brand-bg { background-color: #ff6600; }
+        .brand-text { color: #ff6600; }
+        .brand-border { border-color: #ff6600; }
+        .brand-hover:hover { background-color: #e65c00; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
+    <nav class="bg-white shadow-sm border-b border-gray-200" x-data="{ mobileOpen: false }">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="flex items-center gap-2">
+                        <div class="w-8 h-8 brand-bg rounded-lg flex items-center justify-center">
+                            <span class="text-white font-bold text-sm">AD</span>
+                        </div>
+                        <span class="font-semibold text-lg text-gray-900">{{ app_name }}</span>
+                    </a>
+                </div>
+                <div class="hidden md:flex items-center gap-4">
+                    <a href="/wizard" class="text-gray-600 hover:text-gray-900 font-medium">New Project</a>
+                    {% if user %}
+                    <a href="/dashboard" class="text-gray-600 hover:text-gray-900 font-medium">Dashboard</a>
+                    <a href="/logout" class="text-gray-600 hover:text-gray-900 font-medium">Logout</a>
+                    <span class="text-sm text-gray-500">{{ user.name }}</span>
+                    {% else %}
+                    <a href="/login" class="text-gray-600 hover:text-gray-900 font-medium">Sign In</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+    <main class="flex-1">{% block content %}{% endblock %}</main>
+    <footer class="bg-white border-t border-gray-200 py-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm">
+            &copy; 2026 {{ app_name }}. Built with Auto Development Studio.
+        </div>
+    </footer>
+</body>
+</html>

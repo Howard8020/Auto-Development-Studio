@@ -1,0 +1,14 @@
+{
+    "name": "auto-development-studio",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "tailwindcss -i ./app/static/css/input.css -o ./app/static/css/output.css --watch",
+        "build": "tailwindcss -i ./app/static/css/input.css -o ./app/static/css/output.css --minify"
+    },
+    "devDependencies": {
+        "tailwindcss": "^3.4.0",
+        "autoprefixer": "^10.4.0",
+        "postcss": "^8.4.0"
+    }
+}

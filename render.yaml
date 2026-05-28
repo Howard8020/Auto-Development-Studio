@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: auto-development-studio
+    runtime: python
+    plan: free
+    buildCommand: pip install uv && uv sync && npm install && npx tailwindcss -i ./app/static/css/input.css -o ./app/static/css/output.css --minify
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: APP_NAME
+        value: Auto Studio
+      - key: DEBUG
+        value: "false"
+      - key: DATABASE_URL
+        value: sqlite:///./data/studio.db
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
