@@ -98,7 +98,6 @@ async def wizard_generate(request: Request):
         return RedirectResponse(url="/wizard")
     project_name = store["project_name"].replace(" ", "-").lower()
     output_dir = os.path.join(PROJECT_ROOT, "generated", project_name)
-    print(f'WIZARD_GEN: output_dir={output_dir} script={os.path.join(PROJECT_ROOT, "scripts", "generate_project.py")} store_keys={list(store.keys())}', flush=True)
     os.makedirs(output_dir, exist_ok=True)
     input_path = os.path.join(output_dir, "input.json")
     with open(input_path, "w") as f:
@@ -126,7 +125,7 @@ async def wizard_success(request: Request, name: str):
 async def wizard_download(request: Request, name: str):
     if "user" not in request.session:
         return RedirectResponse(url="/login")
-    generated_dir = os.path.join(PROJECT_ROOT, "generated", name, name)
+    generated_dir = os.path.join(PROJECT_ROOT, "generated", name)
     zip_path = os.path.join(generated_dir, f"{name}.zip")
     if not os.path.exists(zip_path):
         parent_dir = os.path.dirname(generated_dir)
