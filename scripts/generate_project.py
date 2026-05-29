@@ -23,7 +23,10 @@ def generate(input_data: dict, output_dir: str):
     (out / "data").mkdir()
     (out / "scripts").mkdir()
 
-    # ___ pyproject.toml ___
+# ___ pyproject.toml ___
+    sqlalchemy_dep = '    "sqlalchemy>=2.0.36",\n' if use_db else ""
+    jinja_dep = '    "jinja2>=3.1.4",\n' if use_auth else ""
+    authlib_dep = '    "authlib>=1.4.0",\n' if use_auth else ""
     (out / "pyproject.toml").write_text(f"""[project]
 name = "{name}"
 version = "0.1.0"
@@ -32,10 +35,7 @@ requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.115.0",
     "uvicorn[standard]>=0.32.0",
-    {"\"sqlalchemy>=2.0.36\"," if use_db else ""}
-    {"\"jinja2>=3.1.4\"," if use_auth else ""}
-    {"\"authlib>=1.4.0\"," if use_auth else ""}
-    "python-dotenv>=1.0.1",
+{sqlalchemy_dep}{jinja_dep}{authlib_dep}    "python-dotenv>=1.0.1",
     "pydantic-settings>=2.6.0",
 ]
 [build-system]
@@ -44,6 +44,8 @@ build-backend = "setuptools.build_meta"
 """)
 
     # ___ config.py ___
+    auth_client_id = '    google_client_id: str = ""\n' if use_auth else ""
+    auth_client_secret = '    google_client_secret: str = ""\n' if use_auth else ""
     (out / "app" / "config.py").write_text(f"""from pydantic_settings import BaseSettings
 from dotenv import load_dotenv
 load_dotenv()
@@ -51,9 +53,7 @@ load_dotenv()
 class Settings(BaseSettings):
     app_name: str = "{name}"
     debug: bool = True
-    {"google_client_id: str = \"\"" if use_auth else ""}
-    {"google_client_secret: str = \"\"" if use_auth else ""}
-    session_secret: str = "change-me"
+{auth_client_id}{auth_client_secret}    session_secret: str = "change-me"
     model_config = {{"env_file": ".env", "env_file_encoding": "utf-8"}}
 """)
 
@@ -140,9 +140,10 @@ async def health():
 """)
 
     # ___ .env ___
+    auth_env = "GOOGLE_CLIENT_ID=your-google-client-id\nGOOGLE_CLIENT_SECRET=your-google-client-secret" if use_auth else ""
     (out / ".env.example").write_text(f"""APP_NAME={name}
 DEBUG=true
-{"GOOGLE_CLIENT_ID=your-google-client-id\nGOOGLE_CLIENT_SECRET=your-google-client-secret" if use_auth else ""}
+{auth_env}
 SESSION_SECRET=change-me
 """)
 
