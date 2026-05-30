@@ -19,7 +19,7 @@ def _init_templates(tpl: Jinja2Templates):
 async def login_page(request: Request):
     if "user" in request.session:
         return RedirectResponse(url="/dashboard")
-    return templates.TemplateResponse(request, "login.html", {"request": request})
+    return templates.TemplateResponse(request, "login.html", {"request": request, "app_name": settings.app_name})
 
 @router.get("/auth/login")
 async def auth_login(request: Request):
@@ -34,14 +34,14 @@ async def auth_login(request: Request):
         return RedirectResponse(url="/dashboard")
     redirect_uri = str(request.url_for("auth_callback"))
     client = AsyncOAuth2Client(settings.google_client_id, client_secret=settings.google_client_secret, redirect_uri=redirect_uri)
-    authorization_url, state = client.create_authorization_url("https://accounts.google.com/o/oauth2/auth", prompt="select_account")
+    authorization_url, state = client.create_authorization_url("https://accounts.google.com/o/oauth2/auth", prompt="select_account", scope="openid email profile")
     request.session["oauth_state"] = state
     return RedirectResponse(url=authorization_url)
 
 @router.get("/auth/callback")
 async def auth_callback(request: Request, code: str = "", state: str = "", error: str = ""):
     if error:
-        return templates.TemplateResponse(request, "login.html", {"request": request, "error": f"Google auth error: {error}"})
+        return templates.TemplateResponse(request, "login.html", {"request": request, "error": f"Google auth error: {error}", "app_name": settings.app_name})
     stored_state = request.session.get("oauth_state")
     if not stored_state or stored_state != state:
         raise HTTPException(status_code=400, detail="State mismatch")
