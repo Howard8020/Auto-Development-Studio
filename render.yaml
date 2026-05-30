@@ -2,19 +2,28 @@ services:
   - type: web
     name: auto-development-studio
     runtime: python
-    plan: free
-    buildCommand: pip install -r requirements.txt && npm install && npm run build
-    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    plan: pro
+    buildCommand: pip install -r requirements.txt && npm install && npm run build && wget -q https://github.com/benbjohnson/litestream/releases/download/v0.3.13/litestream-v0.3.13-linux-amd64.tar.gz -O /tmp/litestream.tar.gz && tar -xzf /tmp/litestream.tar.gz -C /usr/local/bin/ litestream && rm /tmp/litestream.tar.gz
+    startCommand: chmod +x /app/scripts/start.sh && /app/scripts/start.sh
     envVars:
       - key: APP_NAME
         value: Auto Studio
       - key: DEBUG
         value: "false"
       - key: DATABASE_URL
-        value: sqlite:///./data/studio.db
+        value: sqlite:////tmp/auto-studio-data/studio.db
       - key: GOOGLE_CLIENT_ID
         sync: false
       - key: GOOGLE_CLIENT_SECRET
         sync: false
       - key: SESSION_SECRET
         generateValue: true
+      # --- Litestream / R2 backup ---
+      - key: REPLICA_URL
+        value: s3://swing-trade-backup/auto-studio/studio.db
+      - key: R2_ENDPOINT
+        value: https://e5bafb10849308f3ec5dc30252f2414f.r2.cloudflarestorage.com
+      - key: R2_ACCESS_KEY_ID
+        sync: false
+      - key: R2_SECRET_ACCESS_KEY
+        sync: false

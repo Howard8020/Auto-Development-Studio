@@ -1,0 +1,10 @@
+# Litestream config — continuous SQLite backup to Cloudflare R2
+# Env vars set in Render dashboard: REPLICA_URL, R2_ENDPOINT, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY
+
+dbs:
+  - path: /tmp/auto-studio-data/studio.db
+    replicas:
+      - url: ${REPLICA_URL}
+        access-key-id: ${R2_ACCESS_KEY_ID}
+        secret-access-key: ${R2_SECRET_ACCESS_KEY}
+        endpoint: ${R2_ENDPOINT}
