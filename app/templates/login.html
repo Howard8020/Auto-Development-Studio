@@ -4,11 +4,16 @@
 <div class="min-h-[70vh] flex items-center justify-center px-4">
     <div class="max-w-md w-full bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
         <div class="text-center mb-8">
-            <div class="w-16 h-16 brand-bg rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <span class="text-white text-2xl font-bold">AD</span>
+            <div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style="background: linear-gradient(135deg, #ff6600, #ff8533); box-shadow: 0 4px 12px rgba(255,102,0,.25);">
+                <svg width="28" height="28" viewBox="0 0 92 92" fill="none">
+                    <path d="M26 70 L46 20 L66 70" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <line x1="32" y1="56" x2="60" y2="56" stroke="white" stroke-width="4" stroke-linecap="round"/>
+                    <polygon points="43,48 43,60 54,54" fill="white" opacity="0.9"/>
+                </svg>
             </div>
             <h1 class="text-2xl font-bold text-gray-900">Welcome back</h1>
-            <p class="text-gray-500 mt-1">Sign in to {{ app_name }}</p>
+            <p class="text-gray-500 mt-1">Sign in to <span class="gradient-text font-semibold">Auto Studio</span></p>
+            <p class="text-[10px] tracking-[2px] font-semibold text-gray-400 uppercase mt-1">Building Apps with AI</p>
         </div>
         {% if error %}
         <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">{{ error }}</div>

@@ -4,12 +4,29 @@
 <section class="relative overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
         <div class="text-center max-w-3xl mx-auto">
+            <!-- Logo + Tagline -->
+            <div class="flex items-center justify-center gap-3 mb-8">
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center" style="background: linear-gradient(135deg, #ff6600, #ff8533); box-shadow: 0 4px 12px rgba(255,102,0,.3);">
+                    <svg width="24" height="24" viewBox="0 0 92 92" fill="none">
+                        <path d="M26 70 L46 20 L66 70" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        <line x1="32" y1="56" x2="60" y2="56" stroke="white" stroke-width="4" stroke-linecap="round"/>
+                        <polygon points="43,48 43,60 54,54" fill="white" opacity="0.9"/>
+                    </svg>
+                </div>
+                <div class="text-left">
+                    <div class="flex items-baseline gap-1.5">
+                        <span class="text-2xl font-bold text-gray-900">Auto</span>
+                        <span class="text-2xl font-bold gradient-text">Studio</span>
+                    </div>
+                    <p class="text-[10px] tracking-[2.5px] font-semibold text-gray-400 uppercase">Building Apps with AI</p>
+                </div>
+            </div>
             <h1 class="text-5xl font-extrabold text-gray-900 tracking-tight sm:text-6xl">
                 Build your next app<br/>
-                <span class="brand-text">in minutes, not days</span>
+                <span class="gradient-text">in minutes, not days</span>
             </h1>
             <p class="mt-6 text-xl text-gray-600 leading-relaxed">
-                Describe what you want. Answer a few questions. {{ app_name }} generates a complete, production-ready FastAPI + Tailwind application — with auth, database, and deployment config built in.
+                Describe what you want, upload a scope sheet, or both. Auto Studio generates a complete, production-ready FastAPI + Tailwind application — with auth, database, and deployment config built in.
             </p>
             <div class="mt-10 flex justify-center gap-4">
                 <a href="/wizard" class="inline-flex items-center px-8 py-4 brand-bg text-white font-semibold rounded-xl shadow-lg brand-hover transition-all duration-200 text-lg">
@@ -29,17 +46,17 @@
             <div class="p-6 border border-gray-200 rounded-xl">
                 <div class="w-12 h-12 brand-bg rounded-lg flex items-center justify-center mb-4"><span class="text-white text-xl">⚡</span></div>
                 <h3 class="font-semibold text-lg mb-2">FastAPI Backend</h3>
-                <p class="text-gray-600">Async Python with SQLAlchemy, SQLite, and full REST routing.</p>
+                <p class="text-gray-600">Async Python with SQLAlchemy, SQLite, and full REST routing — built from <strong>your scope or uploaded .txt file</strong>.</p>
             </div>
             <div class="p-6 border border-gray-200 rounded-xl">
                 <div class="w-12 h-12 brand-bg rounded-lg flex items-center justify-center mb-4"><span class="text-white text-xl">🎨</span></div>
                 <h3 class="font-semibold text-lg mb-2">Tailwind CSS v3</h3>
-                <p class="text-gray-600">Beautiful, responsive UI with your chosen brand palette.</p>
+                <p class="text-gray-600">Beautiful, responsive UI with your chosen brand palette and generated pages.</p>
             </div>
             <div class="p-6 border border-gray-200 rounded-xl">
-                <div class="w-12 h-12 brand-bg rounded-lg flex items-center justify-center mb-4"><span class="text-white text-xl">🔐</span></div>
-                <h3 class="font-semibold text-lg mb-2">Google OAuth</h3>
-                <p class="text-gray-600">One-click sign in with Google. Optional — works without it too.</p>
+                <div class="w-12 h-12 brand-bg rounded-lg flex items-center justify-center mb-4"><span class="text-white text-xl">📦</span></div>
+                <h3 class="font-semibold text-lg mb-2">ZIP Download</h3>
+                <p class="text-gray-600">Every project outputs a complete, production-ready .zip file. Extract, run, and deploy.</p>
             </div>
         </div>
     </div>
