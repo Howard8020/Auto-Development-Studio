@@ -4,8 +4,8 @@ import json, os, shutil, sys, zipfile
 from pathlib import Path
 
 def generate(input_data: dict, output_dir: str):
-    name = input_data.get("project_name") or input_data.get("name", "my-app").replace(" ", "-").lower()
-    color = input_data.get("brand_color") or input_data.get("color", "#ff6600")
+    name = input_data.get("project_name", "my-app").replace(" ", "-").lower()
+    color = input_data.get("brand_color", "#ff6600")
     use_auth = input_data.get("use_auth", "yes") == "yes"
     use_db = input_data.get("use_db", "yes") == "yes"
     models = [m.strip() for m in input_data.get("models", "").split(",") if m.strip()]
@@ -184,14 +184,6 @@ SESSION_SECRET=change-me
     # ___ __init__ files ___
     (out / "app" / "__init__.py").write_text("")
     (out / "app" / "routers" / "__init__.py").write_text("")
-
-    # ___ Write scope to SCOPE.md ___
-    scope_text = input_data.get("scope", "")
-    if scope_text:
-        scope_path = out / "SCOPE.md"
-        scope_md = "# Project Scope\n\n" + scope_text + "\n"
-        scope_path.write_text(scope_md, encoding="utf-8")
-        print(f"  Wrote SCOPE.md ({len(scope_text)} chars)")
 
     # ___ ZIP it ___
     zip_path = Path(output_dir) / f"{name}.zip"

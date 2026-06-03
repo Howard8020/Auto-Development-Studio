@@ -1,109 +1,97 @@
-<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12" x-data="scopeUpload()">
-    <div class="text-center mb-10">
-        <h1 class="text-3xl font-extrabold text-gray-900">Project Scope</h1>
-        <p class="text-gray-500 text-lg mt-2">Upload a scope sheet or describe your project below</p>
+{% extends "base.html" %}
+{% block title %}New Project — Scope{% endblock %}
+{% block content %}
+<div class="max-w-3xl mx-auto py-8">
+    <!-- Step indicator -->
+    <div class="mb-6 flex items-center space-x-2 text-sm text-gray-500">
+        <span class="font-medium text-brand-600">Step 1</span>
+        <span>of 4: Scope</span>
+        <div class="flex-1 h-2 bg-gray-200 rounded-full ml-2">
+            <div class="h-2 bg-brand-500 rounded-full" style="width: 25%"></div>
+        </div>
     </div>
 
-    <form @submit.prevent="submitScope" class="space-y-8">
-        <!-- Scope Sheet Upload -->
-        <div class="bg-white rounded-2xl border border-gray-200 p-8">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4">Upload Scope Sheet</h2>
-            <p class="text-sm text-gray-500 mb-4">Upload a <code>.txt</code> file with your project requirements, specifications, or any reference material. The content will be added to your prompt.</p>
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Describe your project</h1>
+        <p class="text-gray-600">Paste a scope document, upload a file, or just type what you're building.</p>
+    </div>
 
-            <!-- Drag & Drop Zone -->
-            <div @click="$refs.fileInput.click()"
-                 @dragover.prevent="$el.classList.add('dragover')"
-                 @dragleave.prevent="$el.classList.remove('dragover')"
-                 @drop.prevent="handleDrop($event)"
-                 class="upload-zone rounded-xl p-10 text-center"
-                 :class="file ? 'border-green-400 bg-green-50' : ''">
-                <template x-if="!file">
-                    <div>
-                        <div class="text-4xl mb-3">📄</div>
-                        <p class="text-gray-600 font-medium">Drop your scope sheet here</p>
-                        <p class="text-gray-400 text-sm mt-1">or <span class="brand-text font-semibold underline cursor-pointer">click to browse</span></p>
-                        <p class="text-gray-400 text-xs mt-3">Accepts .txt files only</p>
+    <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200"
+         x-data="{
+            dragOver: false,
+            fileName: '',
+            fileContent: '',
+            async handleFile(file) {
+                this.fileName = file.name;
+                this.fileContent = await file.text();
+            },
+            async handleDrop(e) {
+                this.dragOver = false;
+                const files = e.dataTransfer.files;
+                if (files.length > 0) await this.handleFile(files[0]);
+            }
+         }">
+        <form
+            hx-post="/wizard/save-scope"
+            hx-target="#wizard-feedback"
+            hx-swap="innerHTML"
+            hx-encoding="multipart/form-data"
+        >
+            <!-- File upload zone -->
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Upload Scope File <span class="text-gray-400">(optional — .txt, .md)</span></label>
+                <div
+                    class="relative border-2 border-dashed rounded-lg p-8 text-center transition-all"
+                    :class="dragOver ? 'border-brand-500 bg-brand-50' : 'border-gray-300 hover:border-gray-400'"
+                    @dragover.prevent="dragOver = true"
+                    @dragleave.prevent="dragOver = false"
+                    @drop.prevent="handleDrop()"
+                >
+                    <input type="file" name="scope_file" accept=".txt,.md,.text"
+                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        @change="if (.target.files[0]) handleFile(.target.files[0])">
+                    <div x-show="!fileName">
+                        <svg class="w-12 h-12 mx-auto text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                        </svg>
+                        <p class="text-gray-600">Drag & drop or <span class="text-brand-600 font-medium">click to browse</span></p>
+                        <p class="text-xs text-gray-400 mt-1">Supports .txt and .md files</p>
                     </div>
-                </template>
-                <template x-if="file">
-                    <div>
-                        <div class="text-4xl mb-3">✅</div>
-                        <p class="text-gray-700 font-medium" x-text="file.name"></p>
-                        <p class="text-gray-400 text-sm mt-1" x-text="(file.size / 1024).toFixed(1) + ' KB'"></p>
-                        <button @click.stop="clearFile()" type="button" class="mt-3 text-sm text-red-500 hover:text-red-700 underline">Remove</button>
+                    <div x-show="fileName" class="flex items-center justify-center space-x-3">
+                        <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <div class="text-left">
+                            <p class="font-medium text-gray-900" x-text="fileName"></p>
+                            <p class="text-xs text-gray-500">File ready to upload</p>
+                        </div>
+                        <button type="button" @click="fileName = ''; fileContent = ''"
+                            class="ml-4 text-gray-400 hover:text-red-500">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
                     </div>
-                </template>
+                </div>
             </div>
-            <input type="file" accept=".txt" x-ref="fileInput" @change="fileSelected($event)" class="hidden">
-        </div>
 
-        <!-- Project Description -->
-        <div class="bg-white rounded-2xl border border-gray-200 p-8">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4">Project Description</h2>
-            <p class="text-sm text-gray-500 mb-4">Describe what you want to build — features, pages, data models, integrations, or any other details.</p>
-            <textarea x-model="description"
-                      rows="8"
-                      class="w-full border border-gray-300 rounded-xl px-4 py-3 text-gray-900 focus:ring-2 focus:ring-brand-500 focus:border-transparent resize-y"
-                      placeholder="Example: A task management app with user authentication, drag-and-drop Kanban boards, and email notifications..."></textarea>
-            <div class="flex justify-between items-center mt-2">
-                <p class="text-xs text-gray-400" x-text="description.length + ' characters'"></p>
-                <p class="text-xs text-gray-400">Tip: Use both scope upload and description for best results</p>
+            <!-- Textarea -->
+            <div class="mb-6">
+                <label for="scope" class="block text-sm font-medium text-gray-700 mb-2">Or Type Your Scope <span class="text-gray-400">(optional if file uploaded)</span></label>
+                <textarea
+                    id="scope"
+                    name="scope"
+                    rows="8"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all font-mono text-sm"
+                    placeholder="Example: A task management app for remote teams. Users can create projects, assign tasks, set deadlines, and track progress with a Kanban board view. Integrates with Slack for notifications and Google Calendar for deadlines."
+                ></textarea>
             </div>
-        </div>
 
-        <div class="flex justify-between">
-            <a href="/wizard" class="px-6 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition">
-                ← Back
-            </a>
-            <button type="submit"
-                    class="px-8 py-3 brand-bg text-white font-semibold rounded-xl brand-hover transition shadow-lg"
-                    :disabled="!description.trim()"
-                    :class="!description.trim() ? 'opacity-50 cursor-not-allowed' : ''">
-                Generate My App →
+            <button type="submit" class="px-6 py-3 bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-colors font-medium">
+                Next: Answer Questions →
             </button>
-        </div>
-    </form>
-
-    <script>
-        function scopeUpload() {
-            return {
-                file: null,
-                description: '',
-                handleDrop(event) {
-                    event.target.classList.remove('dragover');
-                    const f = event.dataTransfer.files[0];
-                    if (f && f.name.endsWith('.txt')) {
-                        this.file = f;
-                        this.readFile(f);
-                    }
-                },
-                fileSelected(event) {
-                    const f = event.target.files[0];
-                    if (f) {
-                        this.file = f;
-                        this.readFile(f);
-                    }
-                },
-                readFile(f) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        if (this.description) {
-                            this.description += '\n\n--- Scope Sheet Content ---\n\n' + e.target.result;
-                        } else {
-                            this.description = e.target.result;
-                        }
-                    };
-                    reader.readAsText(f);
-                },
-                clearFile() {
-                    this.file = null;
-                    this.$refs.fileInput.value = '';
-                },
-                submitScope() {
-                    // Submit via HTMX or fetch — will be wired to backend
-                    alert('Scope submitted! (Backend processing coming soon)');
-                }
-            };
-        }
-    </script>
+        </form>
+    </div>
+    <div id="wizard-feedback" class="mt-4"></div>
 </div>
+{% endblock %}

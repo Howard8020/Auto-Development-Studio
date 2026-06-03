@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block title %}New Project — Details{% endblock %}
+{% block content %}
+<div class="max-w-3xl mx-auto py-8" x-data="{ currentStep: 1, totalSteps: 6 }">
+    <!-- Global step indicator -->
+    <div class="mb-6 flex items-center space-x-2 text-sm text-gray-500">
+        <span class="font-medium text-brand-600">Step 2</span>
+        <span>of 4: Details</span>
+        <div class="flex-1 h-2 bg-gray-200 rounded-full ml-2">
+            <div class="h-2 bg-brand-500 rounded-full" style="width: 50%"></div>
+        </div>
+    </div>
+
+    {% if scope %}
+    <div class="mb-6 p-4 bg-brand-50 border border-brand-200 rounded-lg">
+        <div class="flex items-center justify-between">
+            <span class="text-sm font-medium text-brand-700">Scope captured ✓</span>
+            <span class="text-xs text-brand-600">{{ scope[:80] }}{% if scope|length > 80 %}...{% endif %}</span>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Project Details</h1>
+        <p class="text-gray-600">A few quick questions to customize your scaffold.</p>
+        <div class="mt-4 flex items-center space-x-2 text-sm text-gray-500">
+            <span x-text="'Question ' + currentStep + ' of ' + totalSteps"></span>
+            <div class="flex-1 h-2 bg-gray-200 rounded-full ml-2">
+                <div class="h-2 bg-brand-500 rounded-full transition-all duration-300" :style="'width: ' + ((currentStep / totalSteps) * 100) + '%'"></div>
+            </div>
+        </div>
+    </div>
+
+    <form
+        hx-post="/wizard/save-answers"
+        hx-target="#wizard-content"
+        hx-swap="innerHTML"
+        x-ref="form"
+    >
+<div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200" x-show="currentStep === 1">
+            <h2 class="text-xl font-semibold text-gray-900 mb-2">Project Name</h2>
+            <p class="text-gray-600 mb-4">What's the name of your project?</p>
+            <input type="text" name="project_name" required
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all"
+                placeholder="e.g. TaskFlow">
+        </div>
+
+        <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 mt-4" x-show="currentStep === 2">
+            <h2 class="text-xl font-semibold text-gray-900 mb-2">Tagline</h2>
+            <p class="text-gray-600 mb-4">A short description for your app's hero section.</p>
+            <input type="text" name="tagline"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all"
+                placeholder="e.g. Task management for remote teams">
+        </div>
+
+        <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 mt-4" x-show="currentStep === 3">
+            <h2 class="text-xl font-semibold text-gray-900 mb-2">Brand Color</h2>
+            <p class="text-gray-600 mb-4">Pick a primary accent color for your app's theme.</p>
+            <div class="flex items-center space-x-4">
+                <input type="color" name="brand_color" value="#f97316"
+                    class="w-16 h-16 rounded-lg border border-gray-300 cursor-pointer">
+                <p class="text-xs text-gray-400">A full 10-stop palette will be generated from this hex.</p>
+            </div>
+        </div>
+
+        <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 mt-4" x-show="currentStep === 4">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Features</h2>
+            <div class="space-y-4">
+                <label class="flex items-center space-x-3">
+                    <input type="checkbox" name="enable_auth" value="yes"
+                        class="w-5 h-5 text-brand-500 border-gray-300 rounded focus:ring-brand-500">
+                    <div>
+                        <span class="font-medium text-gray-900">Google OAuth</span>
+                        <p class="text-sm text-gray-500">User authentication with Google sign-in</p>
+                    </div>
+                </label>
+                <label class="flex items-center space-x-3">
+                    <input type="checkbox" name="enable_database" value="yes" checked
+                        class="w-5 h-5 text-brand-500 border-gray-300 rounded focus:ring-brand-500">
+                    <div>
+                        <span class="font-medium text-gray-900">Database</span>
+                        <p class="text-sm text-gray-500">SQLite + SQLAlchemy models</p>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 mt-4" x-show="currentStep === 5">
+            <h2 class="text-xl font-semibold text-gray-900 mb-2">Pages</h2>
+            <p class="text-gray-600 mb-4">Page routes you'd like pre-created (comma-separated).</p>
+            <input type="text" name="pages"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all"
+                placeholder="e.g. about, pricing, contact, features">
+            <div class="mt-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-2">Extra Dependencies</h2>
+                <p class="text-gray-600 mb-4">Additional PyPI packages (comma-separated).</p>
+                <input type="text" name="extra_deps"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all"
+placeholder="e.g. httpx, pandas, celery">
+            </div>
+        </div>
+
+        <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 mt-4" x-show="currentStep === 6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-2">Almost Done!</h2>
+            <p class="text-gray-600 mb-4">Review your answers on the next page, then generate.</p>
+        </div>
+
+        <div class="mt-8 flex justify-between">
+            <button type="button" @click="currentStep--" x-show="currentStep > 1"
+                class="px-6 py-3 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-gray-700 font-medium">
+                ← Back
+            </button>
+            <div class="flex space-x-3">
+                <a href="/wizard" class="px-6 py-3 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-gray-700 font-medium">
+                    ← Start Over
+                </a>
+                <button type="button" @click="currentStep++" x-show="currentStep < totalSteps"
+                    class="px-6 py-3 bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-colors font-medium">
+                    Next →
+                </button>
+                <button type="submit" x-show="currentStep === totalSteps"
+                    class="px-8 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium">
+                    Review & Generate →
+                </button>
+            </div>
+        </div>
+    </form>
+    <div id="wizard-content" class="mt-4"></div>
+</div>
+{% endblock %}

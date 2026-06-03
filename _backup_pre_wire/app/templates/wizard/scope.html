@@ -1,0 +1,109 @@
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12" x-data="scopeUpload()">
+    <div class="text-center mb-10">
+        <h1 class="text-3xl font-extrabold text-gray-900">Project Scope</h1>
+        <p class="text-gray-500 text-lg mt-2">Upload a scope sheet or describe your project below</p>
+    </div>
+
+    <form @submit.prevent="submitScope" class="space-y-8">
+        <!-- Scope Sheet Upload -->
+        <div class="bg-white rounded-2xl border border-gray-200 p-8">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Upload Scope Sheet</h2>
+            <p class="text-sm text-gray-500 mb-4">Upload a <code>.txt</code> file with your project requirements, specifications, or any reference material. The content will be added to your prompt.</p>
+
+            <!-- Drag & Drop Zone -->
+            <div @click="$refs.fileInput.click()"
+                 @dragover.prevent="$el.classList.add('dragover')"
+                 @dragleave.prevent="$el.classList.remove('dragover')"
+                 @drop.prevent="handleDrop($event)"
+                 class="upload-zone rounded-xl p-10 text-center"
+                 :class="file ? 'border-green-400 bg-green-50' : ''">
+                <template x-if="!file">
+                    <div>
+                        <div class="text-4xl mb-3">📄</div>
+                        <p class="text-gray-600 font-medium">Drop your scope sheet here</p>
+                        <p class="text-gray-400 text-sm mt-1">or <span class="brand-text font-semibold underline cursor-pointer">click to browse</span></p>
+                        <p class="text-gray-400 text-xs mt-3">Accepts .txt files only</p>
+                    </div>
+                </template>
+                <template x-if="file">
+                    <div>
+                        <div class="text-4xl mb-3">✅</div>
+                        <p class="text-gray-700 font-medium" x-text="file.name"></p>
+                        <p class="text-gray-400 text-sm mt-1" x-text="(file.size / 1024).toFixed(1) + ' KB'"></p>
+                        <button @click.stop="clearFile()" type="button" class="mt-3 text-sm text-red-500 hover:text-red-700 underline">Remove</button>
+                    </div>
+                </template>
+            </div>
+            <input type="file" accept=".txt" x-ref="fileInput" @change="fileSelected($event)" class="hidden">
+        </div>
+
+        <!-- Project Description -->
+        <div class="bg-white rounded-2xl border border-gray-200 p-8">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Project Description</h2>
+            <p class="text-sm text-gray-500 mb-4">Describe what you want to build — features, pages, data models, integrations, or any other details.</p>
+            <textarea x-model="description"
+                      rows="8"
+                      class="w-full border border-gray-300 rounded-xl px-4 py-3 text-gray-900 focus:ring-2 focus:ring-brand-500 focus:border-transparent resize-y"
+                      placeholder="Example: A task management app with user authentication, drag-and-drop Kanban boards, and email notifications..."></textarea>
+            <div class="flex justify-between items-center mt-2">
+                <p class="text-xs text-gray-400" x-text="description.length + ' characters'"></p>
+                <p class="text-xs text-gray-400">Tip: Use both scope upload and description for best results</p>
+            </div>
+        </div>
+
+        <div class="flex justify-between">
+            <a href="/wizard" class="px-6 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition">
+                ← Back
+            </a>
+            <button type="submit"
+                    class="px-8 py-3 brand-bg text-white font-semibold rounded-xl brand-hover transition shadow-lg"
+                    :disabled="!description.trim()"
+                    :class="!description.trim() ? 'opacity-50 cursor-not-allowed' : ''">
+                Generate My App →
+            </button>
+        </div>
+    </form>
+
+    <script>
+        function scopeUpload() {
+            return {
+                file: null,
+                description: '',
+                handleDrop(event) {
+                    event.target.classList.remove('dragover');
+                    const f = event.dataTransfer.files[0];
+                    if (f && f.name.endsWith('.txt')) {
+                        this.file = f;
+                        this.readFile(f);
+                    }
+                },
+                fileSelected(event) {
+                    const f = event.target.files[0];
+                    if (f) {
+                        this.file = f;
+                        this.readFile(f);
+                    }
+                },
+                readFile(f) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        if (this.description) {
+                            this.description += '\n\n--- Scope Sheet Content ---\n\n' + e.target.result;
+                        } else {
+                            this.description = e.target.result;
+                        }
+                    };
+                    reader.readAsText(f);
+                },
+                clearFile() {
+                    this.file = null;
+                    this.$refs.fileInput.value = '';
+                },
+                submitScope() {
+                    // Submit via HTMX or fetch — will be wired to backend
+                    alert('Scope submitted! (Backend processing coming soon)');
+                }
+            };
+        }
+    </script>
+</div>

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Preview — {{ app_name }}{% endblock %}
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 py-12">
+    <div class="mb-8">
+        <div class="flex items-center gap-3 mb-2">
+            <span class="bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-full">STEP 3 OF 3</span>
+        </div>
+        <h1 class="text-3xl font-bold text-gray-900">Preview your project</h1>
+        <p class="text-gray-500 mt-2">Review your choices before generating.</p>
+    </div>
+    <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+        <div class="p-6" style="border-left: 4px solid {{ data.brand_color }}">
+            <h2 class="text-xl font-bold text-gray-900" style="color: {{ data.brand_color }}">{{ data.project_name }}</h2>
+            <p class="text-gray-500 mt-1">{{ data.tagline }}</p>
+        </div>
+        <div class="px-6 pb-6 space-y-4">
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="p-4 bg-gray-50 rounded-xl">
+                    <p class="text-xs text-gray-400 uppercase tracking-wide font-semibold">Auth</p>
+                    <p class="font-medium mt-1">{{ "Google OAuth" if data.use_auth == "yes" else "None" }}</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-xl">
+                    <p class="text-xs text-gray-400 uppercase tracking-wide font-semibold">Database</p>
+                    <p class="font-medium mt-1">{{ "SQLite" if data.use_db == "yes" else "None" }}</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-xl">
+                    <p class="text-xs text-gray-400 uppercase tracking-wide font-semibold">Deploy</p>
+                    <p class="font-medium mt-1 capitalize">{{ data.deploy_target }}</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-xl">
+                    <p class="text-xs text-gray-400 uppercase tracking-wide font-semibold">Brand</p>
+                    <div class="flex items-center gap-2 mt-1">
+                        <span class="w-4 h-4 rounded" style="background-color: {{ data.brand_color }}"></span>
+                        <span class="font-mono text-sm">{{ data.brand_color }}</span>
+                    </div>
+                </div>
+            </div>
+            {% if data.models %}
+            <div>
+                <p class="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-1">Models</p>
+                <div class="flex flex-wrap gap-2">
+                    {% for m in data.models.split(",") %}
+                    <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">{{ m.strip() }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            {% if data.pages %}
+            <div>
+                <p class="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-1">Pages</p>
+                <div class="flex flex-wrap gap-2">
+                    {% for p in data.pages.split(",") %}
+                    <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">{{ p.strip() }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            {% if data.extras %}
+            <div>
+                <p class="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-1">Extras</p>
+                <p class="text-gray-700">{{ data.extras }}</p>
+            </div>
+            {% endif %}
+            <div class="p-4 bg-gray-50 rounded-xl">
+                <p class="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-1">Scope</p>
+                <p class="text-gray-700 text-sm">{{ data.scope[:300] }}{% if data.scope|length > 300 %}...{% endif %}</p>
+            </div>
+        </div>
+    </div>
+    <div class="flex justify-between mt-8">
+        <a href="/wizard/answers" class="px-8 py-3 border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-all">← Edit</a>
+        <form method="POST" action="/wizard/generate">
+            <button type="submit" class="px-8 py-3 brand-bg text-white font-semibold rounded-xl brand-hover transition-all">Generate Project →</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
