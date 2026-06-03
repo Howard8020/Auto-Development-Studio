@@ -1,5 +1,5 @@
-﻿@echo off
-REM branch.bat — create feature branch, commit, show diff vs master
+@echo off
+REM branch.bat � create feature branch, commit, show diff vs master
 REM Usage: branch <feature-name>
 
 if "%1"=="" (
@@ -23,8 +23,8 @@ if %%ERRORLEVEL%% neq 0 (
 
 echo.
 echo === Changes (diff vs master) ===
-git fetch origin master 2>nul
-git diff master...%BRANCH_NAME% --stat
+git fetch origin main 2>nul
+git diff main...%BRANCH_NAME% --stat
 echo.
 echo === Branch '%BRANCH_NAME%' is ready ===
 echo Next step: git push origin %BRANCH_NAME%
