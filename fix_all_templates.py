@@ -1,4 +1,75 @@
-{% extends "base.html" %}
+from pathlib import Path
+
+P = Path('app/templates')
+
+# ============================================================
+# PART 1: Patch base.html ? inject ads-* design tokens + dark nav
+# ============================================================
+base = (P / 'base.html').read_text(encoding='utf-8').lstrip('\ufeff')
+
+# The tokens + overrides to inject into <head>
+TOKENS = """
+    <style>
+    /* === ADS Design Tokens (dark glass) === */
+    :root {
+        --bg: #0f1117;
+        --bg-surface: rgba(255,255,255,0.03);
+        --bg-card: rgba(255,255,255,0.025);
+        --text: #e2e4ea;
+        --text-dim: rgba(255,255,255,0.55);
+        --text-muted: rgba(255,255,255,0.35);
+        --accent: #6366f1;
+        --accent-light: #a5b4fc;
+        --accent-glow: rgba(99,102,241,0.35);
+        --gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
+        --border: rgba(255,255,255,0.08);
+        --r: 12px;
+        --r-sm: 8px;
+    }
+    body { background: var(--bg) !important; color: var(--text) !important; }
+    .ads-page { max-width: 640px; margin: 0 auto; padding: 2.5rem 1.5rem 3rem; }
+    .ads-heading { font-size: 1.75rem; font-weight: 700; color: white; margin-bottom: 0.25rem; letter-spacing: -0.02em; }
+    .ads-sub { font-size: 0.9rem; color: var(--text-dim); margin-bottom: 1.5rem; }
+    .ads-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r); padding: 1.25rem; margin-bottom: 1rem; }
+    .ads-input { width: 100%; padding: 0.7rem 0.875rem; background: var(--bg-surface); color: var(--text); border: 1px solid var(--border); border-radius: var(--r-sm); font-size: 0.875rem; outline: none; transition: border-color 0.15s; }
+    .ads-input:focus { border-color: var(--accent); }
+    .ads-input::placeholder { color: var(--text-muted); }
+    .ads-btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1.1rem; border-radius: var(--r-sm); font-weight: 600; font-size: 0.875rem; text-decoration: none; cursor: pointer; border: none; transition: all 0.15s; }
+    .ads-btn-lg { padding: 0.7rem 1.4rem; font-size: 0.9375rem; }
+    .ads-btn-primary { background: var(--gradient); color: white; }
+    .ads-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 16px var(--accent-glow); }
+    .ads-btn-cta { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; box-shadow: 0 4px 16px rgba(34,197,94,0.25); }
+    .ads-btn-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(34,197,94,0.4); }
+    .ads-btn-ghost { background: var(--bg-surface); color: var(--text-dim); border: 1px solid var(--border); }
+    .ads-btn-ghost:hover { background: rgba(255,255,255,0.06); color: white; }
+    .ads-badge { display: inline-flex; align-items: center; padding: 0.25rem 0.7rem; border-radius: 20px; font-size: 0.7rem; font-weight: 600; background: rgba(99,102,241,0.12); color: var(--accent-light); letter-spacing: 0.02em; }
+    .ads-badge-gray { background: rgba(255,255,255,0.05); color: var(--text-muted); }
+    .ads-badge-green { background: rgba(34,197,94,0.12); color: #4ade80; }
+    .ads-progress-track { height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
+    .ads-progress-bar { height: 100%; background: var(--gradient); border-radius: 2px; transition: width 0.3s; }
+    .ads-hr { height: 1px; background: var(--border); margin: 1.25rem 0; }
+.ads-label { font-size: 0.65rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+    .gradient-text { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    /* Dark nav override */
+    nav { background: rgba(15,17,23,0.9) !important; backdrop-filter: blur(12px) !important; border-color: var(--border) !important; }
+    nav a { color: var(--text-dim) !important; }
+    nav a:hover { color: white !important; }
+    footer { background: rgba(15,17,23,0.8) !important; border-color: var(--border) !important; color: var(--text-muted) !important; }
+    footer * { color: inherit !important; }
+    </style>
+"""
+
+if '<!-- ADS_TOKENS -->' not in base:
+    base = base.replace('    {% block extra_head %}', '    <!-- ADS_TOKENS -->\n' + TOKENS + '\n    {% block extra_head %}')
+    (P / 'base.html').write_text(base, encoding='utf-8')
+    print("[1/2] Patched base.html with ads-* tokens")
+else:
+    print("[1/2] base.html already has tokens, skipping")
+
+# ============================================================
+# PART 2: Rewrite scope.html to use ads-* classes (match others)
+# ============================================================
+scope_new = r'''{% extends "base.html" %}
 {% block title %}New Project ? Scope{% endblock %}
 {% block content %}
 <div class="ads-page" x-data="{ fileName: '', fileContent: '', dragOver: false }">
@@ -72,3 +143,8 @@ function readFile(file) {
 }
 </script>
 {% endblock %}
+'''
+
+(P / 'wizard' / 'scope.html').write_text(scope_new.lstrip('\ufeff'), encoding='utf-8')
+print("[2/2] Rewrote wizard/scope.html with ads-* tokens")
+print("\nDone. Ctrl+Shift+R on all pages to see the consistent dark theme.")

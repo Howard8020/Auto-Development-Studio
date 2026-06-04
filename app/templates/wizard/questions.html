@@ -1,130 +1,105 @@
 {% extends "base.html" %}
-{% block title %}New Project — Details{% endblock %}
+{% block title %}New Project - Details{% endblock %}
 {% block content %}
-<div class="max-w-3xl mx-auto py-8" x-data="{ currentStep: 1, totalSteps: 6 }">
-    <!-- Global step indicator -->
-    <div class="mb-6 flex items-center space-x-2 text-sm text-gray-500">
-        <span class="font-medium text-brand-600">Step 2</span>
-        <span>of 4: Details</span>
-        <div class="flex-1 h-2 bg-gray-200 rounded-full ml-2">
-            <div class="h-2 bg-brand-500 rounded-full" style="width: 50%"></div>
+<div class="ads-page" x-data="{ currentStep: 1, totalSteps: 6 }">
+    <div style="margin-bottom: 1.5rem;">
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+            <span class="ads-badge">Step 2 of 4</span>
+            <span class="ads-badge-gray ads-badge" x-text="'Q' + currentStep + '/' + totalSteps"></span>
+        </div>
+        <div class="ads-progress-track">
+            <div class="ads-progress-bar" style="width: 50%"></div>
         </div>
     </div>
 
     {% if scope %}
-    <div class="mb-6 p-4 bg-brand-50 border border-brand-200 rounded-lg">
-        <div class="flex items-center justify-between">
-            <span class="text-sm font-medium text-brand-700">Scope captured ✓</span>
-            <span class="text-xs text-brand-600">{{ scope[:80] }}{% if scope|length > 80 %}...{% endif %}</span>
-        </div>
+    <div class="ads-card" style="padding: 0.75rem 1rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between;">
+        <span style="font-size: 0.8125rem; color: var(--accent-light); font-weight: 500;">Scope captured &#10003;</span>
+        <span style="font-size: 0.75rem; color: var(--text-muted); max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ scope[:80] }}{% if scope|length > 80 %}...{% endif %}</span>
     </div>
     {% endif %}
 
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">Project Details</h1>
-        <p class="text-gray-600">A few quick questions to customize your scaffold.</p>
-        <div class="mt-4 flex items-center space-x-2 text-sm text-gray-500">
-            <span x-text="'Question ' + currentStep + ' of ' + totalSteps"></span>
-            <div class="flex-1 h-2 bg-gray-200 rounded-full ml-2">
-                <div class="h-2 bg-brand-500 rounded-full transition-all duration-300" :style="'width: ' + ((currentStep / totalSteps) * 100) + '%'"></div>
-            </div>
-        </div>
-    </div>
+    <h1 class="ads-heading">Project Details</h1>
+    <p class="ads-sub">A few quick questions to customize your scaffold.</p>
 
-    <form
-        hx-post="/wizard/save-answers"
-        hx-target="#wizard-content"
-        hx-swap="innerHTML"
-        x-ref="form"
-    >
-<div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200" x-show="currentStep === 1">
-            <h2 class="text-xl font-semibold text-gray-900 mb-2">Project Name</h2>
-            <p class="text-gray-600 mb-4">What's the name of your project?</p>
-            <input type="text" name="project_name" required
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all"
-                placeholder="e.g. TaskFlow">
+    <form hx-post="/wizard/save-answers" hx-target="#wizard-content" hx-swap="innerHTML" x-ref="form" style="margin-top: 1.5rem;">
+
+<div class="ads-card" x-show="currentStep === 1">
+            <h2 style="font-size: 1.0625rem; font-weight: 600; color: white; margin-bottom: 0.25rem;">Project Name</h2>
+            <p style="font-size: 0.8125rem; color: var(--text-dim); margin-bottom: 0.75rem;">What's the name of your project?</p>
+            <input type="text" name="project_name" required class="ads-input" placeholder="e.g. TaskFlow">
         </div>
 
-        <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 mt-4" x-show="currentStep === 2">
-            <h2 class="text-xl font-semibold text-gray-900 mb-2">Tagline</h2>
-            <p class="text-gray-600 mb-4">A short description for your app's hero section.</p>
-            <input type="text" name="tagline"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all"
-                placeholder="e.g. Task management for remote teams">
+        <div class="ads-card" x-show="currentStep === 2">
+            <h2 style="font-size: 1.0625rem; font-weight: 600; color: white; margin-bottom: 0.25rem;">Tagline</h2>
+            <p style="font-size: 0.8125rem; color: var(--text-dim); margin-bottom: 0.75rem;">A short description for your app's hero section.</p>
+            <input type="text" name="tagline" class="ads-input" placeholder="e.g. Task management for remote teams">
         </div>
 
-        <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 mt-4" x-show="currentStep === 3">
-            <h2 class="text-xl font-semibold text-gray-900 mb-2">Brand Color</h2>
-            <p class="text-gray-600 mb-4">Pick a primary accent color for your app's theme.</p>
-            <div class="flex items-center space-x-4">
-                <input type="color" name="brand_color" value="#f97316"
-                    class="w-16 h-16 rounded-lg border border-gray-300 cursor-pointer">
-                <p class="text-xs text-gray-400">A full 10-stop palette will be generated from this hex.</p>
+        <div class="ads-card" x-show="currentStep === 3">
+            <h2 style="font-size: 1.0625rem; font-weight: 600; color: white; margin-bottom: 0.25rem;">Brand Color</h2>
+            <p style="font-size: 0.8125rem; color: var(--text-dim); margin-bottom: 0.75rem;">Pick a primary accent color for your app's theme.</p>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <input type="color" name="brand_color" value="#6366f1" style="width: 48px; height: 48px; border-radius: 10px; border: 1px solid var(--border); cursor: pointer; background: var(--bg-surface);">
+                <span style="font-size: 0.75rem; color: var(--text-muted);">A full palette will be generated from this hex.</span>
             </div>
         </div>
 
-        <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 mt-4" x-show="currentStep === 4">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4">Features</h2>
-            <div class="space-y-4">
-                <label class="flex items-center space-x-3">
-                    <input type="checkbox" name="enable_auth" value="yes"
-                        class="w-5 h-5 text-brand-500 border-gray-300 rounded focus:ring-brand-500">
+        <div class="ads-card" x-show="currentStep === 4">
+            <h2 style="font-size: 1.0625rem; font-weight: 600; color: white; margin-bottom: 0.75rem;">Features</h2>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                <label style="display: flex; align-items: flex-start; gap: 0.625rem; cursor: pointer; padding: 0.625rem; border-radius: var(--r-sm); border: 1px solid var(--border); background: var(--bg-surface);">
+                    <input type="checkbox" name="enable_auth" value="yes" style="margin-top: 0.15rem; accent-color: var(--accent); width: 1rem; height: 1rem;">
                     <div>
-                        <span class="font-medium text-gray-900">Google OAuth</span>
-                        <p class="text-sm text-gray-500">User authentication with Google sign-in</p>
+                        <span style="font-weight: 500; font-size: 0.875rem; color: var(--text);">Google OAuth</span>
+                        <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.1rem;">User authentication with Google sign-in</p>
                     </div>
                 </label>
-                <label class="flex items-center space-x-3">
-                    <input type="checkbox" name="enable_database" value="yes" checked
-                        class="w-5 h-5 text-brand-500 border-gray-300 rounded focus:ring-brand-500">
+                <label style="display: flex; align-items: flex-start; gap: 0.625rem; cursor: pointer; padding: 0.625rem; border-radius: var(--r-sm); border: 1px solid var(--border); background: var(--bg-surface);">
+                    <input type="checkbox" name="enable_database" value="yes" checked style="margin-top: 0.15rem; accent-color: var(--accent); width: 1rem; height: 1rem;">
                     <div>
-                        <span class="font-medium text-gray-900">Database</span>
-                        <p class="text-sm text-gray-500">SQLite + SQLAlchemy models</p>
+                        <span style="font-weight: 500; font-size: 0.875rem; color: var(--text);">Database</span>
+                        <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.1rem;">SQLite + SQLAlchemy models</p>
                     </div>
                 </label>
             </div>
         </div>
 
-        <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 mt-4" x-show="currentStep === 5">
-            <h2 class="text-xl font-semibold text-gray-900 mb-2">Pages</h2>
-            <p class="text-gray-600 mb-4">Page routes you'd like pre-created (comma-separated).</p>
-            <input type="text" name="pages"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all"
-                placeholder="e.g. about, pricing, contact, features">
-            <div class="mt-6">
-                <h2 class="text-xl font-semibold text-gray-900 mb-2">Extra Dependencies</h2>
-                <p class="text-gray-600 mb-4">Additional PyPI packages (comma-separated).</p>
-                <input type="text" name="extra_deps"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all"
-placeholder="e.g. httpx, pandas, celery">
+        <div class="ads-card" x-show="currentStep === 5">
+            <h2 style="font-size: 1.0625rem; font-weight: 600; color: white; margin-bottom: 0.25rem;">Pages</h2>
+            <p style="font-size: 0.8125rem; color: var(--text-dim); margin-bottom: 0.75rem;">Page routes to pre-create (comma-separated).</p>
+            <input type="text" name="pages" class="ads-input" placeholder="e.g. about, pricing, contact, features">
+
+            <div style="margin-top: 1.25rem;">
+                <h2 style="font-size: 1.0625rem; font-weight: 600; color: white; margin-bottom: 0.25rem;">Extra Dependencies</h2>
+<p style="font-size: 0.8125rem; color: var(--text-dim); margin-bottom: 0.75rem;">Additional PyPI packages (comma-separated).</p>
+                <input type="text" name="extra_deps" class="ads-input" placeholder="e.g. httpx, pandas, celery">
             </div>
         </div>
 
-        <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 mt-4" x-show="currentStep === 6">
-            <h2 class="text-xl font-semibold text-gray-900 mb-2">Almost Done!</h2>
-            <p class="text-gray-600 mb-4">Review your answers on the next page, then generate.</p>
+        <div class="ads-card" x-show="currentStep === 6">
+            <h2 style="font-size: 1.0625rem; font-weight: 600; color: white; margin-bottom: 0.25rem;">Almost Done!</h2>
+            <p style="font-size: 0.8125rem; color: var(--text-dim);">Review your answers on the next page, then generate.</p>
         </div>
 
-        <div class="mt-8 flex justify-between">
-            <button type="button" @click="currentStep--" x-show="currentStep > 1"
-                class="px-6 py-3 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-gray-700 font-medium">
-                ← Back
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.25rem;">
+            <button type="button" @click="currentStep--" x-show="currentStep > 1" class="ads-btn ads-btn-ghost">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                Back
             </button>
-            <div class="flex space-x-3">
-                <a href="/wizard" class="px-6 py-3 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-gray-700 font-medium">
-                    ← Start Over
-                </a>
-                <button type="button" @click="currentStep++" x-show="currentStep < totalSteps"
-                    class="px-6 py-3 bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-colors font-medium">
-                    Next →
+            <div style="display: flex; gap: 0.5rem;">
+                <a href="/wizard" class="ads-btn ads-btn-ghost">Start Over</a>
+                <button type="button" @click="currentStep++" x-show="currentStep < totalSteps" class="ads-btn ads-btn-primary">
+                    Next
+                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 </button>
-                <button type="submit" x-show="currentStep === totalSteps"
-                    class="px-8 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium">
-                    Review & Generate →
+                <button type="submit" x-show="currentStep === totalSteps" class="ads-btn ads-btn-cta ads-btn-lg">
+                    Review &amp; Generate
+                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 </button>
             </div>
         </div>
     </form>
-    <div id="wizard-content" class="mt-4"></div>
+    <div id="wizard-content" style="margin-top: 0.75rem;"></div>
 </div>
 {% endblock %}

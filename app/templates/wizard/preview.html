@@ -1,85 +1,70 @@
 {% extends "base.html" %}
 {% block title %}Review Your Project{% endblock %}
 {% block content %}
-<div class="max-w-3xl mx-auto py-8">
-    <!-- Global step indicator -->
-    <div class="mb-6 flex items-center space-x-2 text-sm text-gray-500">
-        <span class="font-medium text-brand-600">Step 3</span>
-        <span>of 4: Review</span>
-        <div class="flex-1 h-2 bg-gray-200 rounded-full ml-2">
-            <div class="h-2 bg-brand-500 rounded-full" style="width: 75%"></div>
+<div class="ads-page">
+    <div style="margin-bottom: 1.5rem;">
+        <span class="ads-badge">Step 3 of 4</span>
+        <div class="ads-progress-track" style="margin-top: 0.75rem;">
+            <div class="ads-progress-bar" style="width: 75%"></div>
         </div>
     </div>
 
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">Review Your Project</h1>
-        <p class="text-gray-600">Here's what we'll generate. Make sure everything looks right.</p>
-    </div>
-    <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200">
-        <dl class="space-y-6">
+    <h1 class="ads-heading">Review Your Project</h1>
+    <p class="ads-sub">Make sure everything looks right before generating.</p>
+
+    <div class="ads-card" style="margin-top: 1.5rem;">
+        <dl style="display: flex; flex-direction: column; gap: 1rem;">
             <div>
-                <dt class="text-sm font-medium text-gray-500">Project Name</dt>
-                <dd class="mt-1 text-lg font-semibold text-gray-900">{{ data.name }}</dd>
+                <dt class="ads-label" style="margin-bottom: 0.125rem;">Project Name</dt>
+                <dd style="font-size: 1rem; font-weight: 600; color: white;">{{ data.name }}</dd>
             </div>
             <div>
-                <dt class="text-sm font-medium text-gray-500">Tagline</dt>
-                <dd class="mt-1 text-gray-900">{{ data.tagline or '—' }}</dd>
+                <dt class="ads-label" style="margin-bottom: 0.125rem;">Tagline</dt>
+                <dd style="font-size: 0.875rem; color: var(--text);">{{ data.tagline or "?" }}</dd>
             </div>
             <div>
-                <dt class="text-sm font-medium text-gray-500">Brand Color</dt>
-                <dd class="mt-1 flex items-center space-x-2">
-                    <span class="w-6 h-6 rounded border border-gray-300" style="background-color: {{ data.color }}"></span>
-                    <span class="text-gray-900">{{ data.color }}</span>
+                <dt class="ads-label" style="margin-bottom: 0.125rem;">Brand Color</dt>
+                <dd style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="width: 24px; height: 24px; border-radius: 6px; background: {{ data.color }}; box-shadow: 0 2px 6px rgba(0,0,0,0.3);"></span>
+                    <span style="font-size: 0.875rem; color: var(--text);">{{ data.color }}</span>
                 </dd>
             </div>
             <div>
-                <dt class="text-sm font-medium text-gray-500">Google OAuth</dt>
-                <dd class="mt-1">
-                    {% if data.with_auth == 'yes' %}
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Enabled</span>
-                    {% else %}
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Disabled</span>
-                    {% endif %}
-                </dd>
+                <dt class="ads-label" style="margin-bottom: 0.125rem;">Google OAuth</dt>
+                <dd>{% if data.with_auth == 'yes' %}<span class="ads-badge ads-badge-green">Enabled</span>{% else %}<span class="ads-badge ads-badge-gray">Disabled</span>{% endif %}</dd>
             </div>
             <div>
-                <dt class="text-sm font-medium text-gray-500">Database</dt>
-                <dd class="mt-1">
-{% if data.with_db == 'yes' %}
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Enabled</span>
-                    {% else %}
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Disabled</span>
-                    {% endif %}
-                </dd>
+<dt class="ads-label" style="margin-bottom: 0.125rem;">Database</dt>
+                <dd>{% if data.with_db == 'yes' %}<span class="ads-badge ads-badge-green">Enabled</span>{% else %}<span class="ads-badge ads-badge-gray">Disabled</span>{% endif %}</dd>
             </div>
             <div>
-                <dt class="text-sm font-medium text-gray-500">Pages</dt>
-                <dd class="mt-1 text-gray-900">{{ data.pages or '—' }}</dd>
+                <dt class="ads-label" style="margin-bottom: 0.125rem;">Pages</dt>
+                <dd style="font-size: 0.875rem; color: var(--text);">{{ data.pages or "?" }}</dd>
             </div>
             <div>
-                <dt class="text-sm font-medium text-gray-500">Extra Dependencies</dt>
-                <dd class="mt-1 text-gray-900">{{ data.deps or '—' }}</dd>
+                <dt class="ads-label" style="margin-bottom: 0.125rem;">Extra Dependencies</dt>
+                <dd style="font-size: 0.875rem; color: var(--text);">{{ data.deps or "?" }}</dd>
             </div>
             {% if data.scope %}
             <div>
-                <dt class="text-sm font-medium text-gray-500">Project Scope</dt>
-                <dd class="mt-1 text-gray-700 whitespace-pre-wrap text-sm bg-gray-50 p-4 rounded-lg max-h-48 overflow-y-auto">{{ data.scope[:500] }}{% if data.scope|length > 500 %}...{% endif %}</dd>
+                <dt class="ads-label" style="margin-bottom: 0.125rem;">Project Scope</dt>
+                <dd style="font-size: 0.8125rem; color: var(--text-dim); background: var(--bg-surface); padding: 0.75rem; border-radius: var(--r-sm); max-height: 10rem; overflow-y: auto; white-space: pre-wrap; line-height: 1.5;">{{ data.scope[:500] }}{% if data.scope|length > 500 %}...{% endif %}</dd>
             </div>
             {% endif %}
         </dl>
-        <div class="mt-8 flex justify-between">
-            <a href="/wizard" class="px-6 py-3 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-gray-700 font-medium">
-                ← Start Over
+
+        <div class="ads-hr"></div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <a href="/wizard" class="ads-btn ads-btn-ghost">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                Start Over
             </a>
             <div id="result">
-                <button
-                    hx-post="/wizard/generate"
-                    hx-target="#result"
-                    hx-swap="innerHTML"
-                    hx-indicator="#gen-spinner"
-                    class="px-8 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium">
-                    <span id="gen-spinner" class="htmx-indicator">⏳ Generating...</span>
-                    <span>Generate Project →</span>
+                <button hx-post="/wizard/generate" hx-target="#result" hx-swap="innerHTML" hx-indicator="#gen-spinner" class="ads-btn ads-btn-cta ads-btn-lg">
+                    <span id="gen-spinner" class="htmx-indicator" style="display: none;">Generating...</span>
+                    <span>Generate Project</span>
+                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 </button>
             </div>
         </div>

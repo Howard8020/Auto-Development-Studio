@@ -5,7 +5,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from starlette.templating import Jinja2Templates
 from app.config import Settings
 from app.database import Base, engine
-from app.routers import auth, wizard
+from app.routers import auth, wizard, brand_studio
 
 settings = Settings()
 
@@ -20,9 +20,10 @@ def create_app() -> FastAPI:
     app.mount("/static", StaticFiles(directory=static_dir), name="static")
     Base.metadata.create_all(bind=engine)
     auth._init_templates(templates)
-    wizard._init_templates(templates)
+    brand_studio._init_templates(templates)
     app.include_router(auth.router)
     app.include_router(wizard.router)
+    app.include_router(brand_studio.router)
     app.state.templates = templates
     
     # Add /mockup route here, before return

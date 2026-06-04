@@ -1,43 +1,40 @@
 {% extends "base.html" %}
 {% block title %}Project Generated!{% endblock %}
 {% block content %}
-<div class="max-w-2xl mx-auto py-16 text-center">
-    <!-- Global step indicator -->
-    <div class="mb-6 flex items-center justify-center space-x-2 text-sm text-gray-500">
-        <span class="font-medium text-green-600">Step 4</span>
-        <span>of 4: Done ✓</span>
-        <div class="w-32 h-2 bg-gray-200 rounded-full ml-2">
-            <div class="h-2 bg-green-500 rounded-full" style="width: 100%"></div>
+<div class="ads-page" style="text-align: center; padding-top: 3rem;">
+    <div style="margin-bottom: 1.5rem;">
+        <span class="ads-badge ads-badge-green">Step 4 of 4 ? Done &#10003;</span>
+        <div class="ads-progress-track" style="margin-top: 0.75rem;">
+            <div class="ads-progress-bar" style="width: 100%; background: linear-gradient(135deg, #22c55e, #4ade80);"></div>
         </div>
     </div>
 
-    <div class="w-20 h-20 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-        <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-        </svg>
+    <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(34,197,94,0.12); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem;">
+        <svg width="24" height="24" fill="none" stroke="#4ade80" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
     </div>
-    <h1 class="text-3xl font-bold text-gray-900 mb-2">Project Generated!</h1>
-    <p class="text-gray-600 mb-8">Your scaffolded project is ready to download.</p>
-    <a href="/wizard/download/{{ project_name }}" download
-        class="inline-flex items-center px-8 py-3 bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-colors text-lg font-medium shadow-sm">
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-        </svg>
-        Download {{ project_name }}.zip
-    </a>
-    <div class="mt-8 text-left bg-gray-50 p-6 rounded-lg border border-gray-200">
-        <h3 class="font-semibold text-gray-900 mb-2">Next Steps</h3>
-        <ol class="list-decimal list-inside text-sm text-gray-700 space-y-1">
-            <li>Unzip the downloaded project</li>
-<li>Run <code class="bg-gray-100 px-1.5 py-0.5 rounded text-brand-600">cp .env.example .env</code></li>
-            <li>Run <code class="bg-gray-100 px-1.5 py-0.5 rounded text-brand-600">./scripts/build.sh</code> to install deps + build CSS</li>
-            <li>Run <code class="bg-gray-100 px-1.5 py-0.5 rounded text-brand-600">uv run uvicorn app.main:app --reload</code></li>
+
+    <h1 class="ads-heading" style="margin-bottom: 0.25rem;">Project Generated!</h1>
+    <p class="ads-sub">Your scaffolded project is ready to download.</p>
+
+    <div style="margin-top: 1.5rem;">
+        <a href="/wizard/download/{{ project_name }}" download class="ads-btn ads-btn-primary ads-btn-lg" style="padding: 0.75rem 2rem; font-size: 0.9375rem;">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Download {{ project_name }}.zip
+        </a>
+    </div>
+
+    <div class="ads-card" style="text-align: left; margin-top: 2rem;">
+<h3 style="font-size: 0.875rem; font-weight: 600; color: white; margin-bottom: 0.75rem;">Next Steps</h3>
+        <ol style="padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.375rem;">
+            <li style="font-size: 0.8125rem; color: var(--text-dim);">Unzip the downloaded project</li>
+            <li style="font-size: 0.8125rem; color: var(--text-dim);">Run <code style="background: var(--bg-surface); padding: 0.125rem 0.375rem; border-radius: 4px; font-size: 0.75rem; color: var(--accent-light);">cp .env.example .env</code></li>
+            <li style="font-size: 0.8125rem; color: var(--text-dim);">Run <code style="background: var(--bg-surface); padding: 0.125rem 0.375rem; border-radius: 4px; font-size: 0.75rem; color: var(--accent-light);">./scripts/build.sh</code> to install deps + build CSS</li>
+            <li style="font-size: 0.8125rem; color: var(--text-dim);">Run <code style="background: var(--bg-surface); padding: 0.125rem 0.375rem; border-radius: 4px; font-size: 0.75rem; color: var(--accent-light);">uv run uvicorn app.main:app --reload</code></li>
         </ol>
     </div>
-    <div class="mt-6">
-        <a href="/wizard" class="text-brand-600 hover:text-brand-700 font-medium">
-            Create another project →
-        </a>
+
+    <div style="margin-top: 1.5rem;">
+        <a href="/wizard" class="ads-btn ads-btn-ghost">Create another project &rarr;</a>
     </div>
 </div>
 {% endblock %}

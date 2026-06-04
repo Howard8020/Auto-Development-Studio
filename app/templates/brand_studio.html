@@ -1,0 +1,377 @@
+{% extends "base.html" %}
+{% block extra_head %}
+<style>
+.bs-page, .bs-page * { box-sizing: border-box; }
+.bs-page {
+    max-width: 640px;
+    margin: -1px auto 0;
+    padding: 2.5rem 1.5rem 3rem;
+    background: linear-gradient(180deg, #0f1117 0%, #1a1d28 100%);
+    min-height: calc(100vh - 64px);
+    color: #e2e4ea;
+    font-family: 'Inter', sans-serif;
+    border-radius: 0 0 20px 20px;
+}
+.bs-upload-zone {
+    border: 1.5px dashed rgba(255,255,255,0.2);
+    border-radius: 14px;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    background: rgba(255,255,255,0.02);
+    transition: all 0.2s;
+}
+.bs-upload-zone:hover, .bs-upload-zone.dragover {
+    border-color: rgba(139,92,246,0.6);
+    background: rgba(139,92,246,0.05);
+}
+.bs-upload-icon {
+    width: 28px; height: 28px;
+    color: rgba(255,255,255,0.3);
+    margin: 0 auto 0.6rem;
+    display: block;
+}
+.bs-thumb-row { display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:1rem; }
+.bs-thumb {
+    width: 52px; height: 52px;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+.bs-thumb img { width:100%; height:100%; object-fit:cover; }
+.bs-thumb button {
+    position:absolute; top:2px; right:2px;
+    width:16px; height:16px;
+    background:rgba(239,68,68,0.9); color:white;
+    border:none; border-radius:50%;
+    font-size:10px; line-height:1; cursor:pointer;
+    opacity:0; transition:opacity 0.15s;
+}
+.bs-thumb:hover button { opacity:1; }
+.bs-actions { display:flex; justify-content:center; gap:0.75rem; margin-top:1.25rem; }
+.bs-btn {
+    padding: 0.55rem 1.4rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.bs-btn-primary {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+}
+.bs-btn-primary:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(99,102,241,0.4); }
+.bs-btn-primary:disabled { opacity:0.4; cursor:not-allowed; }
+.bs-btn-ghost {
+    background: rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.65);
+    border: 1px solid rgba(255,255,255,0.08);
+}
+.bs-btn-ghost:hover { background:rgba(255,255,255,0.08); color:white; }
+.bs-overlay {
+    display:none; position:fixed; inset:0;
+    background:rgba(0,0,0,0.65);
+    backdrop-filter:blur(6px);
+    align-items:center; justify-content:center;
+    z-index:50;
+}
+.bs-overlay.active { display:flex; }
+.bs-spinner {
+    width:32px; height:32px;
+    border:3px solid rgba(255,255,255,0.15);
+    border-top-color:#8b5cf6;
+    border-radius:50%;
+    animation:spin .8s linear infinite;
+    margin:0 auto 0.75rem;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+.bs-kit {
+    display:none;
+    margin-top:1.5rem;
+    background:rgba(255,255,255,0.025);
+    border:1px solid rgba(255,255,255,0.07);
+    border-radius:16px;
+    padding:1.75rem;
+}
+.bs-kit.active { display:block; }
+.bs-swatch {
+    width:36px; height:36px;
+    border-radius:8px;
+    cursor:pointer;
+    border:2px solid transparent;
+    transition:all 0.15s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+.bs-swatch:hover { transform:scale(1.12); border-color:rgba(255,255,255,0.4); }
+.bs-preview-box {
+    background:rgba(0,0,0,0.25);
+    border-radius:12px;
+    padding:1.25rem;
+    border:1px solid rgba(255,255,255,0.06);
+}
+.bs-pvcard {
+    padding:0.6rem 0.75rem;
+    border-radius:8px;
+    border:1px solid rgba(255,255,255,0.05);
+}
+.bs-hr { height:1px; background:rgba(255,255,255,0.06); margin:1.25rem 0; }
+.bs-label {
+    font-size:0.65rem; font-weight:600;
+    color:rgba(255,255,255,0.4);
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+margin-bottom:0.625rem;
+}
+.bs-color-input {
+    font-size:0.6rem;
+    color:rgba(255,255,255,0.35);
+    background:transparent;
+    text-align:center;
+    width:3rem;
+    outline:none; border:none;
+    padding:0;
+}
+.bs-step-badge {
+    display:inline-block;
+    background:rgba(99,102,241,0.12);
+    color:#a5b4fc;
+    padding:0.25rem 0.7rem;
+    border-radius:20px;
+    font-size:0.7rem;
+    font-weight:500;
+    letter-spacing:0.02em;
+    margin-bottom:0.6rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bs-page">
+    <div style="text-align:center; margin-bottom:1.75rem;">
+        <span class="bs-step-badge">Step 4 of 7</span>
+        <h2 style="font-size:1.625rem; font-weight:700; color:white; margin:0.5rem 0 0.25rem; letter-spacing:-0.02em;">Brand Your App</h2>
+        <p style="font-size:0.875rem; color:rgba(255,255,255,0.5); margin:0;">Drop reference images ? AI extracts your design system</p>
+    </div>
+
+    <div id="upload-section">
+        <form id="upload-form" enctype="multipart/form-data">
+            <div class="bs-upload-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+                <svg class="bs-upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                <p style="color:rgba(255,255,255,0.55); font-size:0.9rem; margin:0 0 0.2rem;">Drop images or click to browse</p>
+                <p style="color:rgba(255,255,255,0.28); font-size:0.75rem; margin:0;">Logos, screenshots, brand guides ? PNG, JPG, SVG</p>
+            </div>
+            <input type="file" id="file-input" name="images" multiple accept="image/*" style="display:none" onchange="handleFiles(this.files)">
+            <div id="thumb-row" class="bs-thumb-row"></div>
+            <div class="bs-actions">
+                <button type="submit" id="analyze-btn" class="bs-btn bs-btn-primary" disabled>Analyze with AI</button>
+                <button type="button" onclick="skipBrand()" class="bs-btn bs-btn-ghost">Skip ?</button>
+            </div>
+        </form>
+    </div>
+
+    <div id="analysis-overlay" class="bs-overlay">
+        <div style="text-align:center;">
+            <div class="bs-spinner"></div>
+            <p style="color:white; font-size:0.95rem; margin:0;">Extracting brand identity...</p>
+        </div>
+    </div>
+
+    <div id="kit-preview" class="bs-kit">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+            <div>
+                <h3 style="font-size:1.25rem; font-weight:700; color:white; margin:0;" id="kit-style-name"></h3>
+                <p style="color:rgba(255,255,255,0.4); font-size:0.8rem; margin:0.1rem 0 0;" id="kit-mood"></p>
+            </div>
+            <button onclick="resetBrand()" class="bs-btn bs-btn-ghost" style="padding:0.35rem 0.7rem; font-size:0.78rem;">? Re-upload</button>
+        </div>
+
+        <p class="bs-label">Color Palette</p>
+        <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:0.5rem;" id="palette-grid"></div>
+
+        <div class="bs-hr"></div>
+
+        <p class="bs-label">Live Preview</p>
+        <div class="bs-preview-box" id="live-preview">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.75rem;">
+                <div style="width:28px; height:28px; border-radius:6px; background:linear-gradient(135deg,#6366f1,#8b5cf6);" id="preview-logo-grad"></div>
+                <span style="font-weight:600; font-size:0.9rem; color:white;" id="preview-nav-text">{{ project_name or "MyApp" }}</span>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; margin-bottom:0.75rem;">
+                <div class="bs-pvcard" id="preview-card-1">
+<div style="font-weight:600; font-size:0.8rem; margin-bottom:0.15rem;">Dashboard</div>
+                    <div style="font-size:0.7rem; opacity:0.55;">Card element</div>
+                </div>
+                <div class="bs-pvcard" id="preview-card-2">
+                    <div style="font-weight:600; font-size:0.8rem; margin-bottom:0.15rem;">Analytics</div>
+                    <div style="font-size:0.7rem; opacity:0.55;">Card element</div>
+                </div>
+            </div>
+            <div style="display:flex; gap:0.5rem;">
+                <button style="padding:0.4rem 1.1rem; font-weight:600; border-radius:8px; font-size:0.8rem; border:none; color:white;" id="preview-btn-cta">Get Started</button>
+                <button style="padding:0.4rem 1.1rem; font-weight:600; border-radius:8px; font-size:0.8rem; background:transparent;" id="preview-btn-outline">Learn More</button>
+            </div>
+        </div>
+
+        <div class="bs-hr"></div>
+
+        <details>
+            <summary style="font-size:0.75rem; color:rgba(255,255,255,0.35); cursor:pointer;">Edit Raw JSON ?</summary>
+            <textarea id="json-editor" style="margin-top:0.5rem; width:100%; height:9rem; background:rgba(0,0,0,0.3); color:rgba(255,255,255,0.7); border-radius:8px; padding:0.75rem; font-family:ui-monospace,SFMono-Regular,monospace; font-size:0.7rem; border:1px solid rgba(255,255,255,0.06); resize:vertical;"></textarea>
+            <button onclick="applyJsonEdits()" class="bs-btn bs-btn-ghost" style="margin-top:0.4rem; padding:0.3rem 0.7rem; font-size:0.75rem;">Apply JSON</button>
+        </details>
+
+        <div style="text-align:center; margin-top:1.5rem;">
+            <button onclick="applyBrandKit()" class="bs-btn bs-btn-primary" style="padding:0.65rem 2.5rem; font-size:0.95rem;">Apply & Continue ?</button>
+        </div>
+    </div>
+</div>
+
+<script>
+let brandKit = {{ brand_kit | tojson if brand_kit else '{}' }};
+let uploadedFiles = [];
+const dz = document.getElementById('drop-zone');
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('dragover'); handleFiles(e.dataTransfer.files); });
+
+function handleFiles(files) {
+    for (const f of files) {
+        if (!f.type.startsWith('image/')) continue;
+        uploadedFiles.push(f);
+        const r = new FileReader();
+        r.onload = e => {
+            const i = uploadedFiles.length - 1;
+            const t = document.createElement('div');
+            t.className = 'bs-thumb';
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            t.appendChild(img);
+            const btn = document.createElement('button');
+            btn.textContent = '\u00d7';
+            btn.onclick = ev => { ev.stopPropagation(); uploadedFiles.splice(i,1); t.remove(); document.getElementById('analyze-btn').disabled = uploadedFiles.length===0; };
+            t.appendChild(btn);
+            document.getElementById('thumb-row').appendChild(t);
+        };
+        r.readAsDataURL(f);
+    }
+    document.getElementById('analyze-btn').disabled = uploadedFiles.length === 0;
+}
+
+document.getElementById('upload-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    if (!uploadedFiles.length) return;
+    document.getElementById('analysis-overlay').classList.add('active');
+    const fd = new FormData();
+    uploadedFiles.forEach(f => fd.append('images', f));
+    try {
+        const r = await fetch('/brand/analyze', {method:'POST', body:fd});
+        brandKit = await r.json();
+        renderKit();
+    } catch(err) {
+        alert('Analysis failed: ' + err.message);
+    } finally {
+        document.getElementById('analysis-overlay').classList.remove('active');
+    }
+});
+
+function skipBrand() {
+    document.getElementById('analysis-overlay').classList.add('active');
+    fetch('/brand/skip',{method:'POST'}).then(r=>r.json())
+.then(d => { brandKit = d.brand_kit; renderKit(); })
+        .finally(() => document.getElementById('analysis-overlay').classList.remove('active'));
+}
+
+function renderKit() {
+    if (!brandKit.colors) return;
+    document.getElementById('upload-section').style.display = 'none';
+    document.getElementById('kit-preview').classList.add('active');
+    document.getElementById('kit-style-name').textContent = brandKit.style_name || 'Custom Brand';
+    document.getElementById('kit-mood').textContent = (brandKit.mood || []).join('  \u00b7  ');
+
+    const g = document.getElementById('palette-grid');
+    g.innerHTML = '';
+    const nm = {bg_primary:'BG', bg_secondary:'Surface', bg_card:'Card', text_primary:'Text', text_secondary:'Muted', accent:'Accent', cta:'CTA', gradient_start:'Grad 1', gradient_end:'Grad 2'};
+    for (const [k, l] of Object.entries(nm)) {
+        const h = brandKit.colors[k] || '#888';
+        const el = document.createElement('div');
+        el.style.cssText = 'display:flex; flex-direction:column; align-items:center; gap:0.25rem;';
+        const sw = document.createElement('div');
+        sw.className = 'bs-swatch';
+        sw.style.background = h;
+        sw.onclick = () => editColor(k, sw);
+        el.appendChild(sw);
+        const lbl = document.createElement('span');
+        lbl.textContent = l;
+        lbl.style.cssText = 'font-size:0.62rem; color:rgba(255,255,255,0.4);';
+        el.appendChild(lbl);
+        const inp = document.createElement('input');
+        inp.className = 'bs-color-input';
+        inp.value = h;
+        inp.onchange = () => updateColor(k, inp.value);
+        el.appendChild(inp);
+        g.appendChild(el);
+    }
+
+    const c = brandKit.colors, ui = brandKit.ui || {};
+    const p = document.getElementById('live-preview');
+    p.style.background = c.bg_secondary;
+    p.style.color = c.text_primary;
+    p.style.borderRadius = ui.border_radius || '0.75rem';
+    document.getElementById('preview-logo-grad').style.background = 'linear-gradient(135deg,' + c.gradient_start + ',' + c.gradient_end + ')';
+    document.getElementById('preview-nav-text').style.color = c.text_primary;
+    document.getElementById('preview-card-1').style.background = c.bg_card || (c.accent + '18');
+    document.getElementById('preview-card-1').style.color = c.text_primary;
+    document.getElementById('preview-card-2').style.background = c.bg_card || (c.accent + '18');
+    document.getElementById('preview-card-2').style.color = c.text_primary;
+    document.getElementById('preview-btn-cta').style.background = c.cta || c.accent;
+    document.getElementById('preview-btn-outline').style.border = '1.5px solid ' + c.accent;
+    document.getElementById('preview-btn-outline').style.color = c.accent;
+    document.getElementById('json-editor').value = JSON.stringify(brandKit, null, 2);
+}
+
+function editColor(k, el) {
+    const cp = document.createElement('input');
+    cp.type = 'color';
+    cp.value = brandKit.colors[k];
+    cp.style.position = 'fixed';
+    cp.style.opacity = '0';
+    document.body.appendChild(cp);
+    cp.click();
+    cp.oninput = () => { brandKit.colors[k] = cp.value; el.style.background = cp.value; renderKit(); };
+    cp.onchange = () => { document.getElementById('json-editor').value = JSON.stringify(brandKit, null, 2); cp.remove(); };
+}
+
+function updateColor(k, h) {
+    brandKit.colors[k] = h;
+    document.getElementById('json-editor').value = JSON.stringify(brandKit, null, 2);
+    renderKit();
+}
+
+function applyJsonEdits() {
+    try { brandKit = JSON.parse(document.getElementById('json-editor').value); renderKit(); }
+    catch(e) { alert('Invalid JSON: ' + e.message); }
+}
+
+function resetBrand() {
+    document.getElementById('upload-section').style.display = 'block';
+    document.getElementById('kit-preview').classList.remove('active');
+    uploadedFiles = [];
+    document.getElementById('thumb-row').innerHTML = '';
+    document.getElementById('analyze-btn').disabled = true;
+}
+
+async function applyBrandKit() {
+    const fd = new FormData();
+fd.append('brand_data', JSON.stringify(brandKit));
+    const r = await fetch('/brand/customize', {method:'POST', body:fd});
+    if ((await r.json()).status === 'ok') window.location.href = '/';
+}
+
+if (Object.keys(brandKit).length > 0) renderKit();
+</script>
+{% endblock %}

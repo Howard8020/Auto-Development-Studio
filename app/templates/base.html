@@ -11,52 +11,206 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-        .brand-bg { background: linear-gradient(135deg, #ff6600, #ff8533); }
-        .brand-text { color: #ff6600; }
-        .brand-border { border-color: #ff6600; }
-        .brand-hover:hover { background: linear-gradient(135deg, #e65c00, #ff7720); }
-        .gradient-text { background: linear-gradient(135deg, #ff6600 0%, #ff8533 50%, #fb923c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .upload-zone { border: 2px dashed #d1d5db; transition: all .2s; cursor: pointer; }
-        .upload-zone:hover, .upload-zone.dragover { border-color: #ff6600; background: #fff7ed; }
+        :root {
+            --bg: #0b0d14;
+            --bg-nav: #0f1119;
+            --bg-surface: #131620;
+            --bg-card: #191d2b;
+            --bg-elevated: #1f2336;
+            --border: rgba(255,255,255,0.06);
+            --border-hover: rgba(255,255,255,0.12);
+            --text: #e4e6eb;
+            --text-dim: #9096a8;
+            --text-muted: #5c6278;
+            --accent: #6366f1;
+            --accent-light: #818cf8;
+            --accent-glow: rgba(99,102,241,0.2);
+            --gradient: linear-gradient(135deg, #6366f1, #a855f7);
+            --cta: #22c55e;
+            --cta-hover: #16a34a;
+            --danger: #ef4444;
+            --r: 12px;
+            --r-sm: 8px;
+            --r-lg: 16px;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+        }
+        main { flex: 1; }
+
+        .nav-shell { background: var(--bg-nav); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 40; }
+        .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 1.25rem; display: flex; justify-content: space-between; align-items: center; height: 52px; }
+        .nav-logo { width: 30px; height: 30px; border-radius: 7px; background: var(--gradient); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px var(--accent-glow); }
+        .nav-brand { font-weight: 600; font-size: 0.875rem; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 0.625rem; }
+        .nav-brand:hover { color: white; }
+        .nav-links { display: flex; align-items: center; gap: 1.25rem; }
+        .nav-link { color: var(--text-dim); font-size: 0.8125rem; font-weight: 500; text-decoration: none; transition: color 0.15s; }
+        .nav-link:hover { color: var(--text); }
+        .nav-user { font-size: 0.75rem; color: var(--text-muted); padding-left: 0.75rem; border-left: 1px solid var(--border); margin-left: 0.25rem; }
+
+        .ads-page { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem 3rem; }
+        .ads-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r); padding: 1.75rem; }
+        .ads-card + .ads-card { margin-top: 0.75rem; }
+
+        .ads-input {
+            width: 100%; padding: 0.625rem 0.875rem;
+            background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--r-sm);
+            color: var(--text); font-size: 0.875rem; font-family: inherit;
+            outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .ads-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+        .ads-input::placeholder { color: var(--text-muted); }
+textarea.ads-input { resize: vertical; min-height: 140px; line-height: 1.6; }
+
+        .ads-btn {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.5rem 1.125rem; border-radius: var(--r-sm);
+            font-weight: 600; font-size: 0.8125rem; border: none;
+            cursor: pointer; text-decoration: none; transition: all 0.15s; line-height: 1.5;
+        }
+        .ads-btn-primary { background: var(--gradient); color: white; }
+        .ads-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 16px var(--accent-glow); }
+        .ads-btn-cta { background: var(--cta); color: white; }
+        .ads-btn-cta:hover { background: var(--cta-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(34,197,94,0.3); }
+        .ads-btn-ghost { background: transparent; color: var(--text-dim); border: 1px solid var(--border); }
+        .ads-btn-ghost:hover { border-color: var(--border-hover); color: var(--text); background: rgba(255,255,255,0.03); }
+        .ads-btn-lg { padding: 0.625rem 1.5rem; font-size: 0.875rem; }
+
+        .ads-badge {
+            display: inline-flex; align-items: center; gap: 0.375rem;
+            background: rgba(99,102,241,0.12); color: #a5b4fc;
+            padding: 0.2rem 0.625rem; border-radius: 20px;
+            font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.02em;
+        }
+        .ads-badge-green { background: rgba(34,197,94,0.12); color: #86efac; }
+        .ads-badge-gray { background: rgba(255,255,255,0.05); color: var(--text-muted); }
+
+        .ads-label { display: block; font-size: 0.8125rem; font-weight: 500; color: var(--text-dim); margin-bottom: 0.375rem; }
+        .ads-hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.375rem; }
+        .ads-hr { height: 1px; background: var(--border); margin: 1.5rem 0; border: none; }
+        .ads-heading { font-size: 1.5rem; font-weight: 700; color: white; letter-spacing: -0.02em; }
+        .ads-sub { font-size: 0.875rem; color: var(--text-dim); margin-top: 0.25rem; }
+
+        .ads-upload-zone {
+            border: 1.5px dashed var(--border-hover); border-radius: var(--r);
+            padding: 1.5rem; text-align: center; cursor: pointer;
+            background: rgba(255,255,255,0.015); transition: all 0.2s;
+        }
+        .ads-upload-zone:hover, .ads-upload-zone.dragover {
+            border-color: var(--accent-light); background: rgba(99,102,241,0.04);
+        }
+        .ads-upload-icon {
+            width: 28px; height: 28px; color: var(--text-muted);
+            margin: 0 auto 0.5rem; display: block;
+        }
+
+        .gradient-text {
+            background: var(--gradient);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .ads-progress-track { flex: 1; height: 4px; background: var(--bg-surface); border-radius: 2px; overflow: hidden; }
+        .ads-progress-bar { height: 100%; background: var(--gradient); border-radius: 2px; transition: width 0.3s; }
+
+        .footer-shell { background: var(--bg-nav); border-top: 1px solid var(--border); padding: 1.25rem 0; margin-top: auto; }
+        .footer-inner { max-width: 1200px; margin: 0 auto; padding: 0 1.25rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .footer-logo { width: 18px; height: 18px; border-radius: 5px; background: var(--gradient); display: flex; align-items: center; justify-content: center; }
+        .footer-text { font-size: 0.75rem; color: var(--text-muted); }
     </style>
+    <!-- ADS_TOKENS -->
+
+    <style>
+    /* === ADS Design Tokens (dark glass) === */
+    :root {
+        --bg: #0f1117;
+        --bg-surface: rgba(255,255,255,0.03);
+        --bg-card: rgba(255,255,255,0.025);
+        --text: #e2e4ea;
+        --text-dim: rgba(255,255,255,0.55);
+        --text-muted: rgba(255,255,255,0.35);
+        --accent: #6366f1;
+        --accent-light: #a5b4fc;
+        --accent-glow: rgba(99,102,241,0.35);
+        --gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
+        --border: rgba(255,255,255,0.08);
+        --r: 12px;
+        --r-sm: 8px;
+    }
+    body { background: var(--bg) !important; color: var(--text) !important; }
+    .ads-page { max-width: 640px; margin: 0 auto; padding: 2.5rem 1.5rem 3rem; }
+    .ads-heading { font-size: 1.75rem; font-weight: 700; color: white; margin-bottom: 0.25rem; letter-spacing: -0.02em; }
+    .ads-sub { font-size: 0.9rem; color: var(--text-dim); margin-bottom: 1.5rem; }
+    .ads-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r); padding: 1.25rem; margin-bottom: 1rem; }
+    .ads-input { width: 100%; padding: 0.7rem 0.875rem; background: var(--bg-surface); color: var(--text); border: 1px solid var(--border); border-radius: var(--r-sm); font-size: 0.875rem; outline: none; transition: border-color 0.15s; }
+    .ads-input:focus { border-color: var(--accent); }
+    .ads-input::placeholder { color: var(--text-muted); }
+    .ads-btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1.1rem; border-radius: var(--r-sm); font-weight: 600; font-size: 0.875rem; text-decoration: none; cursor: pointer; border: none; transition: all 0.15s; }
+    .ads-btn-lg { padding: 0.7rem 1.4rem; font-size: 0.9375rem; }
+    .ads-btn-primary { background: var(--gradient); color: white; }
+    .ads-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 16px var(--accent-glow); }
+    .ads-btn-cta { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; box-shadow: 0 4px 16px rgba(34,197,94,0.25); }
+    .ads-btn-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(34,197,94,0.4); }
+    .ads-btn-ghost { background: var(--bg-surface); color: var(--text-dim); border: 1px solid var(--border); }
+    .ads-btn-ghost:hover { background: rgba(255,255,255,0.06); color: white; }
+    .ads-badge { display: inline-flex; align-items: center; padding: 0.25rem 0.7rem; border-radius: 20px; font-size: 0.7rem; font-weight: 600; background: rgba(99,102,241,0.12); color: var(--accent-light); letter-spacing: 0.02em; }
+    .ads-badge-gray { background: rgba(255,255,255,0.05); color: var(--text-muted); }
+    .ads-badge-green { background: rgba(34,197,94,0.12); color: #4ade80; }
+    .ads-progress-track { height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
+    .ads-progress-bar { height: 100%; background: var(--gradient); border-radius: 2px; transition: width 0.3s; }
+    .ads-hr { height: 1px; background: var(--border); margin: 1.25rem 0; }
+.ads-label { font-size: 0.65rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+    .gradient-text { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    /* Dark nav override */
+    nav { background: rgba(15,17,23,0.9) !important; backdrop-filter: blur(12px) !important; border-color: var(--border) !important; }
+    nav a { color: var(--text-dim) !important; }
+    nav a:hover { color: white !important; }
+    footer { background: rgba(15,17,23,0.8) !important; border-color: var(--border) !important; color: var(--text-muted) !important; }
+    footer * { color: inherit !important; }
+    </style>
+
+    {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
-    <nav class="bg-white shadow-sm border-b border-gray-200" x-data="{ mobileOpen: false }">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                     <a href="/" class="flex items-center gap-2"><img src="{{ url_for('static', path='images/logo.svg') }}" alt="Auto Dev Studio" class="h-9 w-auto"></a>
+<body>
+    <nav class="nav-shell">
+        <div class="nav-inner">
+            <a href="/" class="nav-brand">
+                <div class="nav-logo">
+                    <svg width="14" height="14" viewBox="0 0 92 92" fill="none">
+                        <path d="M26 70 L46 20 L66 70" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+                        <polygon points="43,48 43,60 54,54" fill="white" opacity="0.9"/>
+</svg>
                 </div>
-                <div class="hidden md:flex items-center gap-4">
-                    <a href="/wizard" class="text-gray-600 hover:text-gray-900 font-medium">New Project</a>
-                    {% if user %}
-                    <a href="/dashboard" class="text-gray-600 hover:text-gray-900 font-medium">Dashboard</a>
-                    <a href="/logout" class="text-gray-600 hover:text-gray-900 font-medium">Logout</a>
-                    <span class="text-sm text-gray-500">{{ user.name }}</span>
-                    {% else %}
-                    <a href="/login" class="text-gray-600 hover:text-gray-900 font-medium">Sign In</a>
-                    {% endif %}
-                </div>
+                Auto Studio
+            </a>
+            <div class="nav-links">
+                <a href="/wizard" class="nav-link">New Project</a>
+                {% if user %}
+                <a href="/dashboard" class="nav-link">Dashboard</a>
+                <a href="/logout" class="nav-link">Logout</a>
+                <span class="nav-user">{{ user.name }}</span>
+                {% else %}
+                <a href="/login" class="nav-link">Sign In</a>
+                {% endif %}
             </div>
         </div>
     </nav>
-    <main class="flex-1">{% block content %}{% endblock %}</main>
-    <footer class="bg-white border-t border-gray-200 py-8 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm">
-            <div class="flex items-center justify-center gap-2 mb-2">
-                <div class="w-5 h-5 rounded-md flex items-center justify-center" style="background: linear-gradient(135deg, #ff6600, #ff8533);">
-                    <svg width="10" height="10" viewBox="0 0 92 92" fill="none">
-                        <path d="M26 70 L46 20 L66 70" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                        <polygon points="43,48 43,60 54,54" fill="white" opacity="0.9"/>
-                    </svg>
-                </div>
-                <span class="font-semibold text-gray-600">Auto Studio</span>
-                <span class="text-[9px] tracking-[2px] font-semibold text-gray-400 uppercase">Building Apps with AI</span>
+    <main>{% block content %}{% endblock %}</main>
+    <footer class="footer-shell">
+        <div class="footer-inner">
+            <div class="footer-logo">
+                <svg width="8" height="8" viewBox="0 0 92 92" fill="none">
+                    <path d="M26 70 L46 20 L66 70" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+                    <polygon points="43,48 43,60 54,54" fill="white" opacity="0.9"/>
+                </svg>
             </div>
-            &copy; 2026 Auto Studio.
+            <span class="footer-text">Auto Studio &middot; Building Apps with AI</span>
         </div>
     </footer>
 </body>
 </html>
-
