@@ -1,0 +1,154 @@
+import os
+WIZ = r"C:\Users\John\Desktop\Auto-Development-Studio\app\templates\wizard"
+os.makedirs(WIZ, exist_ok=True)
+
+T = r"""{% extends "base.html" %}
+{% block title %}Requirements -- Auto-Development-Studio{% endblock %}
+{% block content %}
+<div class="ads-page" x-data="{
+    step: 1,
+    names: ['Project Info','Business Context &amp; Objectives','Target Users &amp; Stakeholders','Core Functionality &amp; Features','User Experience &amp; Interface','Technical &amp; Non-Functional','Scope Boundaries &amp; Constraints','Success Metrics &amp; Post-Launch','Risks &amp; Additional Context'],
+    get pct() { return ((this.step-1)/this.names.length)*100; }
+}">
+    <div style="margin-bottom:1.5rem;">
+        <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">
+            <span class="ads-badge">Step 2 of 5: Requirements</span>
+            <span class="ads-badge-gray ads-badge" x-text="`Q${step}/${names.length}`"></span>
+        </div>
+        <div class="ads-progress-track"><div class="ads-progress-bar" :style="`width:${pct}%`"></div></div>
+    </div>
+    <div style="display:flex;gap:0.375rem;flex-wrap:wrap;margin-bottom:1.25rem;">
+        <template x-for="(n,i) in names" :key="i">
+            <button type="button" @click="step=i+1" :class="step===i+1 ? 'ads-badge' : 'ads-badge-gray ads-badge'" style="cursor:pointer;border:none;font-size:0.75rem;">
+                <span x-text="`${String(i+1).padStart(2,'0')} ${n}`"></span>
+            </button>
+        </template>
+    </div>
+
+    <form hx-post="/wizard/save-requirements" hx-target="#wiz-fb" hx-swap="innerHTML">
+
+        <div class="ads-card" x-show="step===1">
+            <h2 style="font-size:1.0625rem;font-weight:600;color:white;margin-bottom:0.25rem;">Project Info</h2>
+            <p style="font-size:0.8125rem;color:var(--text-dim);margin-bottom:1rem;">Basic details about your project.</p>
+            <label class="ads-label">Project Name <span style="color:var(--accent);">*</span></label>
+            <input type="text" name="project_name" required class="ads-input" placeholder="e.g. TaskFlow" style="margin-bottom:1rem;">
+            <label class="ads-label">Tagline</label>
+            <input type="text" name="tagline" class="ads-input" placeholder="e.g. Task management for remote teams" style="margin-bottom:1rem;">
+            <label class="ads-label">Brand Color</label>
+            <input type="color" name="brand_color" value="#6366f1" style="width:48px;height:48px;border-radius:10px;border:1px solid var(--border);cursor:pointer;display:block;margin-bottom:1rem;">
+            <div style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:1rem;">
+                <label style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--bg-surface);cursor:pointer;">
+                    <input type="checkbox" name="enable_auth" value="yes" style="accent-color:var(--accent);"> <span style="font-size:0.875rem;">Google OAuth</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--bg-surface);cursor:pointer;">
+                    <input type="checkbox" name="enable_database" value="yes" checked style="accent-color:var(--accent);"> <span style="font-size:0.875rem;">SQLite + SQLAlchemy</span>
+                </label>
+            </div>
+            <label class="ads-label">Page Routes</label>
+            <input type="text" name="pages" class="ads-input" placeholder="e.g. about, pricing, contact" style="margin-bottom:1rem;">
+            <label class="ads-label">Extra Dependencies</label>
+<input type="text" name="extra_deps" class="ads-input" placeholder="e.g. httpx, pandas">
+        </div>
+
+        <div class="ads-card" x-show="step===2">
+            <h2 style="font-size:1.0625rem;font-weight:600;color:white;margin-bottom:0.25rem;">Business Context &amp; Objectives</h2>
+            <p style="font-size:0.8125rem;color:var(--text-dim);margin-bottom:1rem;">Business goals, pain points, success vision.</p>
+            <label class="ads-label">Business Goals &amp; Objectives</label>
+            <textarea name="business_objectives" rows="3" class="ads-input" style="resize:vertical;margin-bottom:1rem;" placeholder="Primary business goals?"></textarea>
+            <label class="ads-label">Key Pain Points</label>
+            <textarea name="pain_points" rows="3" class="ads-input" style="resize:vertical;margin-bottom:1rem;" placeholder="What problems does this solve?"></textarea>
+            <label class="ads-label">Success Vision</label>
+            <textarea name="success_vision" rows="3" class="ads-input" style="resize:vertical;" placeholder="What does success look like 6 months after launch?"></textarea>
+        </div>
+
+        <div class="ads-card" x-show="step===3">
+            <h2 style="font-size:1.0625rem;font-weight:600;color:white;margin-bottom:0.25rem;">Target Users &amp; Stakeholders</h2>
+            <p style="font-size:0.8125rem;color:var(--text-dim);margin-bottom:1rem;">Who will use the application?</p>
+            <label class="ads-label">Target Users (Personas)</label>
+            <textarea name="target_users" rows="3" class="ads-input" style="resize:vertical;margin-bottom:1rem;" placeholder="Describe user personas"></textarea>
+            <label class="ads-label">Roles &amp; Permissions</label>
+            <textarea name="user_roles" rows="3" class="ads-input" style="resize:vertical;" placeholder="admin, editor, viewer"></textarea>
+        </div>
+
+        <div class="ads-card" x-show="step===4">
+            <h2 style="font-size:1.0625rem;font-weight:600;color:white;margin-bottom:0.25rem;">Core Functionality &amp; Features</h2>
+            <p style="font-size:0.8125rem;color:var(--text-dim);margin-bottom:1rem;">What the app must, should, and could do.</p>
+            <label class="ads-label">Must-Have (MVP)</label>
+            <textarea name="must_have_features" rows="4" class="ads-input" style="resize:vertical;margin-bottom:1rem;" placeholder="Features essential for launch"></textarea>
+            <label class="ads-label">Should-Have (Post-MVP)</label>
+            <textarea name="should_have_features" rows="3" class="ads-input" style="resize:vertical;margin-bottom:1rem;" placeholder="Important but not critical for v1"></textarea>
+            <label class="ads-label">Third-Party Integrations</label>
+            <textarea name="integrations" rows="3" class="ads-input" style="resize:vertical;" placeholder="e.g. Stripe, SendGrid, Slack"></textarea>
+        </div>
+
+        <div class="ads-card" x-show="step===5">
+            <h2 style="font-size:1.0625rem;font-weight:600;color:white;margin-bottom:0.25rem;">User Experience &amp; Interface</h2>
+            <p style="font-size:0.8125rem;color:var(--text-dim);margin-bottom:1rem;">Platform, design, accessibility.</p>
+            <label class="ads-label">Supported Platforms</label>
+            <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1rem;">
+                <label style="display:flex;align-items:center;gap:0.25rem;padding:0.375rem 0.75rem;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--bg-surface);cursor:pointer;font-size:0.8125rem;"><input type="checkbox" name="platform_web" value="yes" checked style="accent-color:var(--accent);"> Web</label>
+                <label style="display:flex;align-items:center;gap:0.25rem;padding:0.375rem 0.75rem;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--bg-surface);cursor:pointer;font-size:0.8125rem;"><input type="checkbox" name="platform_mobile" value="yes" style="accent-color:var(--accent);"> Mobile</label>
+<label style="display:flex;align-items:center;gap:0.25rem;padding:0.375rem 0.75rem;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--bg-surface);cursor:pointer;font-size:0.8125rem;"><input type="checkbox" name="platform_api" value="yes" style="accent-color:var(--accent);"> API</label>
+            </div>
+            <label class="ads-label">Design &amp; Accessibility</label>
+            <textarea name="design_requirements" rows="4" class="ads-input" style="resize:vertical;" placeholder="Brand guidelines, WCAG, dark mode"></textarea>
+        </div>
+
+        <div class="ads-card" x-show="step===6">
+            <h2 style="font-size:1.0625rem;font-weight:600;color:white;margin-bottom:0.25rem;">Technical &amp; Non-Functional</h2>
+            <p style="font-size:0.8125rem;color:var(--text-dim);margin-bottom:1rem;">Tech stack, performance, compliance.</p>
+            <label class="ads-label">Preferred Tech Stack</label>
+            <textarea name="tech_stack" rows="3" class="ads-input" style="resize:vertical;margin-bottom:1rem;" placeholder="e.g. Python/FastAPI, PostgreSQL, React"></textarea>
+            <label class="ads-label">Performance Expectations</label>
+            <textarea name="performance" rows="3" class="ads-input" style="resize:vertical;margin-bottom:1rem;" placeholder="Concurrent users, load targets"></textarea>
+            <label class="ads-label">Security &amp; Compliance</label>
+            <textarea name="compliance" rows="3" class="ads-input" style="resize:vertical;" placeholder="GDPR, SOC2, HIPAA"></textarea>
+        </div>
+
+        <div class="ads-card" x-show="step===7">
+            <h2 style="font-size:1.0625rem;font-weight:600;color:white;margin-bottom:0.25rem;">Scope Boundaries &amp; Constraints</h2>
+            <p style="font-size:0.8125rem;color:var(--text-dim);margin-bottom:1rem;">In scope, out of scope, timeline, budget.</p>
+            <label class="ads-label">In Scope</label>
+            <textarea name="in_scope" rows="3" class="ads-input" style="resize:vertical;margin-bottom:1rem;" placeholder="What is explicitly included?"></textarea>
+            <label class="ads-label">Out of Scope</label>
+            <textarea name="out_of_scope" rows="3" class="ads-input" style="resize:vertical;margin-bottom:1rem;" placeholder="What is NOT included"></textarea>
+            <div style="display:flex;gap:1rem;"><div style="flex:1;"><label class="ads-label">Timeline</label><input type="text" name="timeline" class="ads-input" placeholder="e.g. 3 months"></div><div style="flex:1;"><label class="ads-label">Budget</label><input type="text" name="budget" class="ads-input" placeholder="e.g. $10k-20k"></div></div>
+        </div>
+
+        <div class="ads-card" x-show="step===8">
+            <h2 style="font-size:1.0625rem;font-weight:600;color:white;margin-bottom:0.25rem;">Success Metrics &amp; Post-Launch</h2>
+            <p style="font-size:0.8125rem;color:var(--text-dim);margin-bottom:1rem;">How will you measure success?</p>
+            <label class="ads-label">KPIs</label>
+            <textarea name="kpis" rows="4" class="ads-input" style="resize:vertical;margin-bottom:1rem;" placeholder="e.g. 5000 users in 3 months, 95% completion rate"></textarea>
+            <label class="ads-label">Analytics &amp; Monitoring</label>
+            <textarea name="analytics" rows="3" class="ads-input" style="resize:vertical;" placeholder="Analytics tools, logging"></textarea>
+        </div>
+
+        <div class="ads-card" x-show="step===9">
+            <h2 style="font-size:1.0625rem;font-weight:600;color:white;margin-bottom:0.25rem;">Risks &amp; Additional Context</h2>
+            <p style="font-size:0.8125rem;color:var(--text-dim);margin-bottom:1rem;">Risks, assumptions, extras.</p>
+            <label class="ads-label">Key Risks</label>
+            <textarea name="risks" rows="4" class="ads-input" style="resize:vertical;margin-bottom:1rem;" placeholder="What could go wrong? (impact, likelihood, mitigation)"></textarea>
+            <label class="ads-label">Assumptions</label>
+<textarea name="assumptions" rows="3" class="ads-input" style="resize:vertical;margin-bottom:1rem;" placeholder="What assumptions are you making?"></textarea>
+            <label class="ads-label">Additional Context</label>
+            <textarea name="additional_context" rows="4" class="ads-input" style="resize:vertical;" placeholder="Competitors, existing systems, etc."></textarea>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1.25rem;">
+            <button type="button" @click="step--" x-show="step>1" class="ads-btn ads-btn-ghost"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg> Back</button>
+            <div style="display:flex;gap:0.5rem;">
+                <a href="/wizard" class="ads-btn ads-btn-ghost">Start Over</a>
+                <button type="button" @click="step++" x-show="step<9" class="ads-btn ads-btn-primary">Next <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></button>
+                <button type="submit" x-show="step===9" class="ads-btn ads-btn-cta ads-btn-lg">Compile Scope Document <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></button>
+            </div>
+        </div>
+    </form>
+    <div id="wiz-fb" style="margin-top:0.75rem;"></div>
+</div>
+{% endblock %}"""
+
+path = os.path.join(WIZ, "requirements.html")
+with open(path, "w", encoding="utf-8") as f:
+    f.write(T)
+print("requirements.html OK")

@@ -3,9 +3,9 @@
 {% block content %}
 <div class="ads-page">
     <div style="margin-bottom: 1.5rem;">
-        <span class="ads-badge">Step 3 of 4</span>
+        <span class="ads-badge">Step 3 of 5</span>
         <div class="ads-progress-track" style="margin-top: 0.75rem;">
-            <div class="ads-progress-bar" style="width: 75%"></div>
+            <div class="ads-progress-bar" style="width: 60%"></div>
         </div>
     </div>
 
@@ -16,39 +16,66 @@
         <dl style="display: flex; flex-direction: column; gap: 1rem;">
             <div>
                 <dt class="ads-label" style="margin-bottom: 0.125rem;">Project Name</dt>
-                <dd style="font-size: 1rem; font-weight: 600; color: white;">{{ data.name }}</dd>
+                <dd style="font-size: 1rem; font-weight: 600; color: white;">{{ answers.get('project_name','') }}</dd>
             </div>
             <div>
                 <dt class="ads-label" style="margin-bottom: 0.125rem;">Tagline</dt>
-                <dd style="font-size: 0.875rem; color: var(--text);">{{ data.tagline or "?" }}</dd>
+                <dd style="font-size: 0.875rem; color: var(--text);">{{ answers.get('tagline','') or '?' }}</dd>
             </div>
             <div>
                 <dt class="ads-label" style="margin-bottom: 0.125rem;">Brand Color</dt>
                 <dd style="display: flex; align-items: center; gap: 0.5rem;">
-                    <span style="width: 24px; height: 24px; border-radius: 6px; background: {{ data.color }}; box-shadow: 0 2px 6px rgba(0,0,0,0.3);"></span>
-                    <span style="font-size: 0.875rem; color: var(--text);">{{ data.color }}</span>
+                    <span style="width: 24px; height: 24px; border-radius: 6px; background: {{ answers.get('brand_color','#6366f1') }}; box-shadow: 0 2px 6px rgba(0,0,0,0.3);"></span>
+                    <span style="font-size: 0.875rem; color: var(--text);">{{ answers.get('brand_color','#6366f1') }}</span>
                 </dd>
             </div>
             <div>
                 <dt class="ads-label" style="margin-bottom: 0.125rem;">Google OAuth</dt>
-                <dd>{% if data.with_auth == 'yes' %}<span class="ads-badge ads-badge-green">Enabled</span>{% else %}<span class="ads-badge ads-badge-gray">Disabled</span>{% endif %}</dd>
+                <dd>{% if answers.get('enable_auth','no') == 'yes' %}<span class="ads-badge ads-badge-green">Enabled</span>{% else %}<span class="ads-badge ads-badge-gray">Disabled</span>{% endif %}</dd>
             </div>
             <div>
 <dt class="ads-label" style="margin-bottom: 0.125rem;">Database</dt>
-                <dd>{% if data.with_db == 'yes' %}<span class="ads-badge ads-badge-green">Enabled</span>{% else %}<span class="ads-badge ads-badge-gray">Disabled</span>{% endif %}</dd>
+                <dd>{% if answers.get('enable_database','yes') == 'yes' %}<span class="ads-badge ads-badge-green">Enabled</span>{% else %}<span class="ads-badge ads-badge-gray">Disabled</span>{% endif %}</dd>
             </div>
             <div>
                 <dt class="ads-label" style="margin-bottom: 0.125rem;">Pages</dt>
-                <dd style="font-size: 0.875rem; color: var(--text);">{{ data.pages or "?" }}</dd>
+                <dd style="font-size: 0.875rem; color: var(--text);">{{ answers.get('pages','?') }}</dd>
             </div>
             <div>
                 <dt class="ads-label" style="margin-bottom: 0.125rem;">Extra Dependencies</dt>
-                <dd style="font-size: 0.875rem; color: var(--text);">{{ data.deps or "?" }}</dd>
+                <dd style="font-size: 0.875rem; color: var(--text);">{{ answers.get('extra_deps','?') }}</dd>
             </div>
-            {% if data.scope %}
+            {% if scope %}
             <div>
                 <dt class="ads-label" style="margin-bottom: 0.125rem;">Project Scope</dt>
-                <dd style="font-size: 0.8125rem; color: var(--text-dim); background: var(--bg-surface); padding: 0.75rem; border-radius: var(--r-sm); max-height: 10rem; overflow-y: auto; white-space: pre-wrap; line-height: 1.5;">{{ data.scope[:500] }}{% if data.scope|length > 500 %}...{% endif %}</dd>
+                <dd style="font-size: 0.8125rem; color: var(--text-dim); background: var(--bg-surface); padding: 0.75rem; border-radius: var(--r-sm); max-height: 10rem; overflow-y: auto; white-space: pre-wrap; line-height: 1.5;">{{ scope[:500] }}{% if scope|length > 500 %}...{% endif %}
+            {% if compiled_scope %}
+            <div>
+                <dt class="ads-label" style="margin-bottom: 0.125rem;">Compiled Scope Document</dt>
+                <dd style="position: relative;">
+                    <pre style="font-size: 0.75rem; color: var(--text-dim); background: var(--bg-surface); padding: 1rem; border-radius: var(--r-sm); max-height: 24rem; overflow-y: auto; white-space: pre-wrap; line-height: 1.6; border: 1px solid var(--border); font-family: ui-monospace, SFMono-Regular, monospace;">{{ compiled_scope }}</pre>
+                    <a href="/wizard/export-markdown" download="scope.md" style="position: absolute; top: 0.625rem; right: 0.625rem; display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.375rem 0.75rem; border-radius: var(--r-sm); background: var(--accent); color: white; font-size: 0.75rem; font-weight: 500; text-decoration: none;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                        Export .md
+                    </a>
+                </dd>
+            </div>
+            {% endif %}
+            {% if answers %}
+            <div>
+                <details style="border: 1px solid var(--border); border-radius: var(--r-sm); padding: 0.75rem;">
+                    <summary style="cursor: pointer; font-size: 0.8125rem; font-weight: 500; color: var(--text-muted);">Requirements Summary</summary>
+                    <div style="margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.625rem;">
+                    {% for key, value in answers.items() %}
+                        <div>
+                            <span style="font-size: 0.6875rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">{{ key }}</span>
+                            <p style="font-size: 0.8125rem; color: var(--text); margin: 0.125rem 0 0; white-space: pre-wrap;">{{ value[:200] }}{% if value|length > 200 %}...{% endif %}</p>
+                        </div>
+                    {% endfor %}
+                    </div>
+                </details>
+            </div>
+            {% endif %}</dd>
             </div>
             {% endif %}
         </dl>
